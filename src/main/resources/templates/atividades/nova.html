@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Cadastrar atividade')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(true)}"></header>
+    <main id="conteudo" class="conteudo">
+        <div class="estreito">
+            <h1>Cadastrar atividade</h1>
+            <p class="voltar"><a class="btn btn-outline-primary btn-pequeno" th:href="@{/atividades}">Voltar para Atividades</a></p>
+
+            <form method="post" th:action="@{/atividades/nova}" th:object="${atividadeForm}" novalidate>
+                <div class="campo">
+                    <label for="nome" class="form-label">Nome da atividade</label>
+                    <input id="nome" type="text" class="form-control" th:field="*{nome}"
+                           autocomplete="off" maxlength="150" required
+                           th:attr="aria-invalid=${#fields.hasErrors('nome')} ? 'true' : null,
+                                    aria-describedby=${#fields.hasErrors('nome')} ? 'nome-erro' : null">
+                    <th:block th:if="${#fields.hasErrors('nome')}"><div th:replace="~{layout/base :: erroCampo('nome-erro', ${#fields.errors('nome')[0]})}"></div></th:block>
+                </div>
+                <div class="campo">
+                    <label for="dataAtividade" class="form-label">Data<span class="dica" id="data-dica">dia/mês/ano</span></label>
+                    <input id="dataAtividade" type="date" class="form-control" th:field="*{dataAtividade}" required
+                           th:attr="aria-invalid=${#fields.hasErrors('dataAtividade')} ? 'true' : null,
+                                    aria-describedby=${#fields.hasErrors('dataAtividade')} ? 'data-dica data-erro' : 'data-dica'">
+                    <th:block th:if="${#fields.hasErrors('dataAtividade')}"><div th:replace="~{layout/base :: erroCampo('data-erro', ${#fields.errors('dataAtividade')[0]})}"></div></th:block>
+                </div>
+                <div class="campo">
+                    <label for="vagasTotal" class="form-label">Número de vagas</label>
+                    <input id="vagasTotal" type="number" class="form-control" th:field="*{vagasTotal}"
+                           inputmode="numeric" min="1" max="10000" step="1" required
+                           th:attr="aria-invalid=${#fields.hasErrors('vagasTotal')} ? 'true' : null,
+                                    aria-describedby=${#fields.hasErrors('vagasTotal')} ? 'vagas-erro' : null">
+                    <th:block th:if="${#fields.hasErrors('vagasTotal')}"><div th:replace="~{layout/base :: erroCampo('vagas-erro', ${#fields.errors('vagasTotal')[0]})}"></div></th:block>
+                </div>
+                <button type="submit" class="btn btn-primary btn-grande w-100">Cadastrar atividade</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

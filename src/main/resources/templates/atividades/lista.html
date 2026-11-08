@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Atividades')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(true)}"></header>
+    <main id="conteudo" class="conteudo">
+        <h1>Atividades</h1>
+        <p th:replace="~{layout/base :: voltarMenu}"></p>
+
+        <th:block th:if="${alerta}"><div th:replace="~{layout/base :: alerta(${alerta})}"></div></th:block>
+
+        <p><a class="btn btn-primary" th:href="@{/atividades/nova}">Cadastrar atividade</a></p>
+
+        <div th:if="${#lists.isEmpty(atividades)}" class="aviso info" role="status">
+            <span class="ico" aria-hidden="true">i</span>
+            <div><span class="visually-hidden">Aviso: </span><strong>Nenhuma atividade cadastrada.</strong></div>
+        </div>
+
+        <ul class="lista" th:unless="${#lists.isEmpty(atividades)}">
+            <li th:each="a : ${atividades}" class="linha-lista">
+                <div>
+                    <span class="nome" th:text="${a.nome()}">Oficina de artes</span>
+                    <span class="sub" th:text="${a.dataFormatada()}">15/11/2026</span>
+                    <span th:if="${a.esgotada()}" class="sub vagas zero"><span aria-hidden="true">⚠ </span>Vagas esgotadas (0)</span>
+                    <span th:unless="${a.esgotada()}" class="sub vagas"
+                          th:text="'Vagas restantes: ' + ${a.restantes()} + ' de ' + ${a.vagasTotal()}">Vagas restantes: 17 de 20</span>
+                </div>
+                <a class="btn btn-outline-primary btn-pequeno" th:href="@{/atividades/{id}/inscritos(id=${a.id()})}">
+                    Ver inscritos<span class="visually-hidden" th:text="' em ' + ${a.nome()}"></span></a>
+            </li>
+        </ul>
+    </main>
+</div>
+</body>
+</html>
