@@ -2,6 +2,9 @@ package br.org.parolin.inscricoes.service;
 
 import br.org.parolin.inscricoes.model.Usuario;
 import br.org.parolin.inscricoes.repository.UsuarioRepository;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.User;
@@ -13,25 +16,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Usuários da equipe: login (UserDetailsService) e criação com senha BCrypt.
- * O bloqueio após tentativas inválidas entra na fase de segurança (RNF01).
+ * Usuários da equipe: login (UserDetailsService), criação com senha BCrypt e
+ * bloqueio temporário depois de tentativas inválidas seguidas.
  */
 @Service
 public class UsuarioService implements UserDetailsService {
 
     public static final int SENHA_TAMANHO_MINIMO = 10;
+    public static final int MAXIMO_TENTATIVAS = 5;
+    public static final Duration TEMPO_BLOQUEIO = Duration.ofMinutes(15);
     private static final int NOME_TAMANHO_MAXIMO = 50;
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Clock relogio;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, Clock relogio) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.relogio = relogio;
     }
 
+    /**
+     * Usuário bloqueado vira "conta travada" para o Spring Security, que recusa antes de
+     * conferir a senha. A tela mostra a mesma mensagem de senha errada.
+     */
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String nomeUsuario) {
@@ -40,8 +51,37 @@ public class UsuarioService implements UserDetailsService {
         return User.withUsername(usuario.getNomeUsuario())
                 .password(usuario.getSenhaHash())
                 .disabled(!usuario.isAtivo())
+                .accountLocked(estaBloqueado(usuario))
                 .roles("EQUIPE")
                 .build();
+    }
+
+    /** Senha errada: soma uma tentativa; na 5ª seguida, bloqueia por 15 minutos. */
+    @Transactional
+    public void registrarFalha(String nomeUsuario) {
+        usuarioRepository.findByNomeUsuario(nomeUsuario).ifPresent(usuario -> {
+            if (estaBloqueado(usuario)) {
+                return;
+            }
+            int tentativas = usuario.getTentativasFalhas() + 1;
+            if (tentativas >= MAXIMO_TENTATIVAS) {
+                usuario.setBloqueadoAte(LocalDateTime.now(relogio).plus(TEMPO_BLOQUEIO));
+                usuario.setTentativasFalhas(0);
+                log.warn("Usuário '{}' bloqueado por {} minutos após {} tentativas inválidas.",
+                        usuario.getNomeUsuario(), TEMPO_BLOQUEIO.toMinutes(), MAXIMO_TENTATIVAS);
+            } else {
+                usuario.setTentativasFalhas(tentativas);
+            }
+        });
+    }
+
+    /** Login correto zera o contador. */
+    @Transactional
+    public void registrarSucesso(String nomeUsuario) {
+        usuarioRepository.findByNomeUsuario(nomeUsuario).ifPresent(usuario -> {
+            usuario.setTentativasFalhas(0);
+            usuario.setBloqueadoAte(null);
+        });
     }
 
     @Transactional
@@ -74,5 +114,9 @@ public class UsuarioService implements UserDetailsService {
         }
         criarUsuario(nomeUsuario, senha);
         log.info("Usuário inicial '{}' criado.", nomeUsuario.trim());
+    }
+
+    private boolean estaBloqueado(Usuario usuario) {
+        return usuario.getBloqueadoAte() != null && usuario.getBloqueadoAte().isAfter(LocalDateTime.now(relogio));
     }
 }

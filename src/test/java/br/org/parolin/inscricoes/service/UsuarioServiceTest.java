@@ -25,7 +25,7 @@ class UsuarioServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new UsuarioService(usuarioRepository, new BCryptPasswordEncoder(4));
+        service = new UsuarioService(usuarioRepository, new BCryptPasswordEncoder(4), java.time.Clock.systemUTC());
     }
 
     @Test
