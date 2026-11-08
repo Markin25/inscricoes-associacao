@@ -1,0 +1,24 @@
+# PostgreSQL local para desenvolvimento e testes.
+# Cria o banco "parolin" (aplicação) e "parolin_test" (testes automatizados).
+# A senha vem do arquivo .env (não versionado); veja .env.example.
+services:
+  postgres:
+    image: postgres:16
+    container_name: parolin-postgres
+    environment:
+      POSTGRES_DB: parolin
+      POSTGRES_USER: ${DB_USER:-parolin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - parolin-dados:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d parolin"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  parolin-dados:

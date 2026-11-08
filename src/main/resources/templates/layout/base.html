@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<!-- Fragmentos comuns. Uso: th:replace="~{layout/base :: head('Título')}" -->
+<head th:fragment="head(titulo)">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' · Inscrições Parolin'">Inscrições Parolin</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+
+<a th:fragment="pular" class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- logado: mostra o botão Sair (POST com token CSRF, inserido pelo th:action) -->
+<header th:fragment="appbar(logado)" class="appbar">
+    <div class="brand">Inscrições<small>Associação de moradores do Parolin</small></div>
+    <form th:if="${logado}" method="post" th:action="@{/logout}" class="m-0">
+        <button type="submit" class="btn btn-appbar">Sair</button>
+    </form>
+</header>
+
+</body>
+</html>

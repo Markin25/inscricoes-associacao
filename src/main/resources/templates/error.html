@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Erro')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(false)}"></header>
+    <main id="conteudo" class="conteudo">
+        <div class="estreito">
+            <h1>Algo deu errado</h1>
+            <!-- Mensagem genérica de propósito: nada de detalhe técnico na tela. -->
+            <div class="aviso err" role="alert">
+                <span class="ico" aria-hidden="true">✖</span>
+                <div><span class="visually-hidden">Erro: </span><strong>Não foi possível concluir. Tente novamente.</strong></div>
+            </div>
+            <a class="btn btn-outline-primary btn-grande w-100" th:href="@{/}">Voltar ao menu</a>
+        </div>
+    </main>
+</div>
+</body>
+</html>
