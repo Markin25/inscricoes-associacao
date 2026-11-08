@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Cadastrar morador')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(true)}"></header>
+    <main id="conteudo" class="conteudo">
+        <div class="estreito">
+            <h1>Cadastrar morador</h1>
+            <p class="voltar"><a class="btn btn-outline-primary btn-pequeno" th:href="@{/moradores}">Voltar para Moradores</a></p>
+
+            <th:block th:if="${alerta}"><div th:replace="~{layout/base :: alerta(${alerta})}"></div></th:block>
+            <p th:if="${duplicado}" class="acao-aviso">
+                <a class="btn btn-outline-primary" th:href="@{/moradores(q=${duplicado.telefone})}">Ver cadastro existente</a>
+            </p>
+
+            <form method="post" th:action="@{/moradores/novo}" th:object="${moradorForm}" novalidate>
+                <div th:replace="~{moradores/campos :: campos}"></div>
+                <button type="submit" class="btn btn-primary btn-grande w-100">Cadastrar</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

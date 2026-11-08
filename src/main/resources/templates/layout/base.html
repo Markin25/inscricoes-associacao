@@ -7,6 +7,7 @@
     <title th:text="${titulo} + ' · Inscrições Parolin'">Inscrições Parolin</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/app.js}" defer></script>
 </head>
 <body>
 
@@ -14,11 +15,32 @@
 
 <!-- logado: mostra o botão Sair (POST com token CSRF, inserido pelo th:action) -->
 <header th:fragment="appbar(logado)" class="appbar">
-    <div class="brand">Inscrições<small>Associação de moradores do Parolin</small></div>
+    <a class="brand" th:href="@{/}">Inscrições<small>Associação de moradores do Parolin</small></a>
     <form th:if="${logado}" method="post" th:action="@{/logout}" class="m-0">
         <button type="submit" class="btn btn-appbar">Sair</button>
     </form>
 </header>
+
+<!-- Aviso com ícone + texto + cor. "a" é um dto.Alerta. Recebe o foco ao abrir a tela. -->
+<div th:fragment="alerta(a)" th:class="'aviso ' + ${a.tipo()}"
+     th:attr="role=${a.tipo() == 'info'} ? 'status' : 'alert'" tabindex="-1" data-foco>
+    <span class="ico" aria-hidden="true" th:text="${a.icone()}">i</span>
+    <div>
+        <span class="visually-hidden" th:text="${a.rotulo()} + ': '">Aviso: </span>
+        <strong th:text="${a.titulo()}">Título</strong>
+        <div th:if="${a.detalhe() != null}" th:text="${a.detalhe()}">Detalhe</div>
+    </div>
+</div>
+
+<!-- Erro junto ao campo: ícone + texto. O id é usado no aria-describedby do campo. -->
+<div th:fragment="erroCampo(id, mensagem)" class="erro-campo" th:id="${id}">
+    <span aria-hidden="true">✖</span><span th:text="${mensagem}">Mensagem</span>
+</div>
+
+<!-- Botão para voltar ao menu -->
+<p th:fragment="voltarMenu" class="voltar">
+    <a class="btn btn-outline-primary btn-pequeno" th:href="@{/}">Voltar ao menu</a>
+</p>
 
 </body>
 </html>

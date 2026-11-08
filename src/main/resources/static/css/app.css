@@ -98,8 +98,45 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
 }
 .appbar :focus-visible { outline-color: var(--on-primary); }
 
+.brand { color: inherit; text-decoration: none; }
+.brand:hover { color: inherit; text-decoration: underline; }
+.btn-pequeno { --bs-btn-padding-x: .8rem; --bs-btn-padding-y: .4rem; }
+.voltar { margin: 0 0 16px; }
+.dica { display: block; font-weight: 400; color: var(--muted); font-size: .9375rem; margin-top: 2px; }
+
 /* Menu */
 .menu { display: grid; gap: 12px; }
+
+/* Listas */
+.barra-acoes { display: grid; gap: 12px; margin-bottom: 16px; }
+.busca { display: grid; gap: 8px; }
+.busca .campo { margin: 0; }
+.contagem { color: var(--muted); margin: 0 0 8px; }
+.lista { list-style: none; margin: 0 0 16px; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.lista li { padding: 10px 14px; border-top: 1px solid var(--border); }
+.lista li:first-child { border-top: 0; }
+.linha-lista { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.nome { font-weight: 700; display: block; overflow-wrap: anywhere; }
+.sub { color: var(--muted); display: block; }
+.paginacao { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.acao-aviso { margin: -4px 0 14px; }
+
+/* Inscrever: cartões e opções de atividade */
+.cartao { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: var(--surface-2); margin-bottom: 10px; }
+.cartao.selecionado { border: 2px solid var(--primary); background: var(--info-bg); }
+.opcao {
+  display: flex; gap: 12px; align-items: flex-start; min-height: 56px; padding: 12px 14px;
+  border: 2px solid var(--border); border-radius: 10px; margin-bottom: 10px; cursor: pointer; background: var(--surface);
+}
+.opcao:has(input:checked) { border-color: var(--primary); background: var(--info-bg); }
+.opcao input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--primary); flex: 0 0 24px; }
+.opcao .t { font-weight: 700; display: block; overflow-wrap: anywhere; }
+.opcao .m { display: block; color: var(--muted); }
+.vagas { font-weight: 700; }
+.vagas.zero { color: var(--err-fg); }
+fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
+.colunas { display: block; }
+.pilha { display: grid; gap: 12px; }
 
 /* Avisos: ícone + texto + cor (nunca só cor) */
 .aviso {
@@ -125,6 +162,10 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
   .lead { font-size: 1.125rem; }
   .menu { grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
   .menu .btn { min-height: 96px; font-size: 1.25rem; }
+  .barra-acoes { grid-template-columns: 1fr auto; align-items: end; }
+  .busca { grid-template-columns: 1fr auto; align-items: end; }
+  .colunas.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 48px; align-items: start; }
+  .colunas.duas h2 { margin-top: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

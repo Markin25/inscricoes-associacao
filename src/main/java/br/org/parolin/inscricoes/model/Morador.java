@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import br.org.parolin.inscricoes.util.TelefoneUtil;
 import java.time.LocalDateTime;
 
 @Entity
@@ -48,4 +49,8 @@ public class Morador {
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
     public LocalDateTime getCriadoEm() { return criadoEm; }
+
+    public String getTelefoneFormatado() {
+        return TelefoneUtil.formatar(telefone);
+    }
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Moradores')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(true)}"></header>
+    <main id="conteudo" class="conteudo">
+        <h1>Moradores</h1>
+        <p th:replace="~{layout/base :: voltarMenu}"></p>
+
+        <th:block th:if="${alerta}"><div th:replace="~{layout/base :: alerta(${alerta})}"></div></th:block>
+
+        <div class="barra-acoes">
+            <form method="get" th:action="@{/moradores}" class="busca" role="search">
+                <div class="campo">
+                    <label for="q" class="form-label">Buscar por nome ou telefone</label>
+                    <input id="q" name="q" type="search" class="form-control" autocomplete="off"
+                           maxlength="120" th:value="${busca}">
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Buscar</button>
+            </form>
+            <a class="btn btn-primary" th:href="@{/moradores/novo}">Cadastrar morador</a>
+        </div>
+
+        <p class="contagem" th:if="${moradores.totalElements > 0}"
+           th:text="${moradores.totalElements == 1} ? '1 morador encontrado' : ${moradores.totalElements} + ' moradores encontrados'">
+            3 moradores encontrados</p>
+
+        <div th:if="${moradores.empty}" class="aviso info" role="status">
+            <span class="ico" aria-hidden="true">i</span>
+            <div><span class="visually-hidden">Aviso: </span><strong>Nenhum morador encontrado.</strong></div>
+        </div>
+
+        <ul class="lista" th:unless="${moradores.empty}">
+            <li th:each="m : ${moradores.content}" class="linha-lista">
+                <div>
+                    <span class="nome" th:text="${m.nome}">Ana Souza</span>
+                    <span class="sub" th:text="${m.telefoneFormatado}">(41) 90000-0001</span>
+                </div>
+                <a class="btn btn-outline-primary btn-pequeno" th:href="@{/inscrever(moradorId=${m.id})}">
+                    Inscrever<span class="visually-hidden" th:text="' ' + ${m.nome}"></span></a>
+            </li>
+        </ul>
+
+        <nav class="paginacao" th:if="${moradores.totalPages > 1}" aria-label="Páginas da lista de moradores">
+            <a th:if="${moradores.hasPrevious()}" class="btn btn-outline-primary"
+               th:href="@{/moradores(q=${busca}, pagina=${moradores.number - 1})}">Anterior</a>
+            <span th:text="'Página ' + ${moradores.number + 1} + ' de ' + ${moradores.totalPages}">Página 1 de 3</span>
+            <a th:if="${moradores.hasNext()}" class="btn btn-outline-primary"
+               th:href="@{/moradores(q=${busca}, pagina=${moradores.number + 1})}">Próxima</a>
+        </nav>
+    </main>
+</div>
+</body>
+</html>
