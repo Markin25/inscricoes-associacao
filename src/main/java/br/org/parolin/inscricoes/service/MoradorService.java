@@ -47,6 +47,30 @@ public class MoradorService {
         }
     }
 
+    /**
+     * Corrige nome e telefone mantendo o mesmo id (as inscrições continuam ligadas a ele).
+     * O telefone novo não pode ser o de outro morador. Sem @Transactional pelo mesmo motivo do cadastrar.
+     */
+    public Morador corrigir(Long id, String nome, String telefone) {
+        Morador morador = buscarPorId(id);
+        String nomeLimpo = validarNome(nome);
+        String telefoneNormalizado = validarTelefone(telefone);
+        moradorRepository.findByTelefone(telefoneNormalizado)
+                .filter(outro -> !outro.getId().equals(id))
+                .ifPresent(outro -> {
+                    throw new TelefoneJaCadastradoException(outro);
+                });
+        morador.setNome(nomeLimpo);
+        morador.setTelefone(telefoneNormalizado);
+        try {
+            return moradorRepository.saveAndFlush(morador);
+        } catch (DataIntegrityViolationException e) {
+            throw moradorRepository.findByTelefone(telefoneNormalizado)
+                    .<RuntimeException>map(TelefoneJaCadastradoException::new)
+                    .orElse(e);
+        }
+    }
+
     @Transactional(readOnly = true)
     public Morador buscarPorId(Long id) {
         return moradorRepository.findById(id)

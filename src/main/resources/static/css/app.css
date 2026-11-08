@@ -127,6 +127,7 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
 .linha-lista { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .nome { font-weight: 700; display: block; overflow-wrap: anywhere; }
 .sub { color: var(--muted); display: block; }
+.acoes-linha { display: flex; gap: 8px; flex-wrap: wrap; }
 .paginacao { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .acao-aviso { margin: -4px 0 14px; }
 

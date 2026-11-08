@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +37,42 @@ public class MoradorController {
         model.addAttribute("moradores", moradores);
         model.addAttribute("busca", busca == null ? "" : busca.trim());
         return "moradores/lista";
+    }
+
+    @GetMapping("/{id}/editar")
+    public String editar(@PathVariable Long id, Model model) {
+        Morador morador = moradorService.buscarPorId(id);
+        model.addAttribute("morador", morador);
+        model.addAttribute("moradorForm", new MoradorForm(morador.getNome(), morador.getTelefoneFormatado()));
+        return "moradores/editar";
+    }
+
+    @PostMapping("/{id}/editar")
+    public String corrigir(@PathVariable Long id,
+                           @Valid @ModelAttribute("moradorForm") MoradorForm form,
+                           BindingResult resultado,
+                           Model model,
+                           RedirectAttributes redirect) {
+        Morador morador = moradorService.buscarPorId(id);
+        model.addAttribute("morador", morador);
+        if (resultado.hasErrors()) {
+            return "moradores/editar";
+        }
+        try {
+            Morador corrigido = moradorService.corrigir(id, form.getNome(), form.getTelefone());
+            redirect.addFlashAttribute("alerta", Alerta.ok("Cadastro corrigido.",
+                    corrigido.getNome() + " · " + corrigido.getTelefoneFormatado()));
+            redirect.addAttribute("q", corrigido.getTelefone());
+            return "redirect:/moradores";
+        } catch (CampoInvalidoException e) {
+            resultado.rejectValue(e.getCampo(), "invalido", e.getMessage());
+            return "moradores/editar";
+        } catch (TelefoneJaCadastradoException e) {
+            model.addAttribute("alerta", Alerta.atencao(
+                    "Este telefone já está cadastrado para " + e.getMoradorExistente().getNome() + ".",
+                    "Confira o número. Dois moradores não podem ter o mesmo telefone."));
+            return "moradores/editar";
+        }
     }
 
     @GetMapping("/novo")

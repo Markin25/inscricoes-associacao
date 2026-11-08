@@ -38,8 +38,12 @@
                     <span class="nome" th:text="${m.nome}">Ana Souza</span>
                     <span class="sub" th:text="${m.telefoneFormatado}">(41) 90000-0001</span>
                 </div>
-                <a class="btn btn-outline-primary btn-pequeno" th:href="@{/inscrever(moradorId=${m.id})}">
-                    Inscrever<span class="visually-hidden" th:text="' ' + ${m.nome}"></span></a>
+                <div class="acoes-linha">
+                    <a class="btn btn-outline-primary btn-pequeno" th:href="@{/moradores/{id}/editar(id=${m.id})}">
+                        Corrigir<span class="visually-hidden" th:text="' ' + ${m.nome}"></span></a>
+                    <a class="btn btn-outline-primary btn-pequeno" th:href="@{/inscrever(moradorId=${m.id})}">
+                        Inscrever<span class="visually-hidden" th:text="' ' + ${m.nome}"></span></a>
+                </div>
             </li>
         </ul>
 
