@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Inscrever morador')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(true)}"></header>
+    <main id="conteudo" class="conteudo">
+        <h1>Inscrever morador</h1>
+        <p th:replace="~{layout/base :: voltarMenu}"></p>
+
+        <div class="colunas duas">
+            <!-- 1. Morador -->
+            <section aria-labelledby="h-morador">
+                <h2 id="h-morador">1. Morador</h2>
+
+                <th:block th:if="${moradorSelecionado != null}">
+                    <div class="cartao selecionado">
+                        <div class="linha-lista">
+                            <div>
+                                <span class="nome" th:text="${moradorSelecionado.nome}">Beatriz Rocha</span>
+                                <span class="sub" th:text="${moradorSelecionado.telefoneFormatado}">(41) 90000-0003</span>
+                            </div>
+                            <a class="btn btn-outline-primary" th:href="@{/inscrever(atividadeId=${atividadeId})}">
+                                Trocar<span class="visually-hidden"> morador</span></a>
+                        </div>
+                    </div>
+                    <th:block th:if="${alertaMorador}"><div th:replace="~{layout/base :: alerta(${alertaMorador})}"></div></th:block>
+                </th:block>
+
+                <th:block th:if="${moradorSelecionado == null}">
+                    <form method="get" th:action="@{/inscrever}" role="search" class="busca-inscricao" novalidate>
+                        <input type="hidden" name="atividadeId" th:if="${atividadeId != null}" th:value="${atividadeId}">
+                        <div class="campo">
+                            <label for="busca" class="form-label">Buscar morador por nome ou telefone</label>
+                            <input id="busca" name="q" type="search" class="form-control" autocomplete="off"
+                                   maxlength="120" th:value="${busca}"
+                                   th:attr="aria-invalid=${erroBusca != null} ? 'true' : null,
+                                            aria-describedby=${erroBusca != null} ? 'busca-erro' : null">
+                            <th:block th:if="${erroBusca}"><div th:replace="~{layout/base :: erroCampo('busca-erro', ${erroBusca})}"></div></th:block>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary w-100">Buscar</button>
+                    </form>
+
+                    <th:block th:if="${buscaFeita and !semResultado and resultados != null}">
+                        <h3 class="subtitulo">Resultado da busca</h3>
+                        <p class="contagem" th:if="${resultados.totalElements > resultados.numberOfElements}"
+                           th:text="'Mostrando ' + ${resultados.numberOfElements} + ' de ' + ${resultados.totalElements} + '. Digite mais para refinar a busca.'"></p>
+                        <div class="cartao" th:each="m : ${resultados.content}">
+                            <div class="linha-lista">
+                                <div>
+                                    <span class="nome" th:text="${m.nome}">Ana Souza</span>
+                                    <span class="sub" th:text="${m.telefoneFormatado}">(41) 90000-0001</span>
+                                </div>
+                                <a class="btn btn-outline-primary" th:href="@{/inscrever(moradorId=${m.id}, atividadeId=${atividadeId})}">
+                                    Selecionar<span class="visually-hidden" th:text="' ' + ${m.nome}"></span></a>
+                            </div>
+                        </div>
+                        <p th:unless="${mostrarCadastro}">
+                            <a class="btn btn-outline-primary w-100" th:href="@{/inscrever(q=${busca}, novo=true, atividadeId=${atividadeId})}">
+                                Não está na lista? Cadastrar novo morador</a>
+                        </p>
+                    </th:block>
+
+                    <div th:if="${semResultado}" class="aviso info espaco-topo" role="status" tabindex="-1" data-foco>
+                        <span class="ico" aria-hidden="true">i</span>
+                        <div><span class="visually-hidden">Aviso: </span><strong>Nenhum morador encontrado.</strong>
+                            <div>Cadastre o morador abaixo.</div></div>
+                    </div>
+
+                    <th:block th:if="${mostrarCadastro}">
+                        <h3 class="subtitulo">Cadastrar novo morador</h3>
+                        <th:block th:if="${alertaDuplicado}">
+                            <div th:replace="~{layout/base :: alerta(${alertaDuplicado})}"></div>
+                            <p class="acao-aviso">
+                                <a class="btn btn-outline-primary" th:href="@{/inscrever(moradorId=${duplicado.id}, atividadeId=${atividadeId})}">
+                                    Usar cadastro existente</a>
+                            </p>
+                        </th:block>
+                        <form method="post" th:action="@{/inscrever/morador}" th:object="${moradorForm}" novalidate>
+                            <input type="hidden" name="q" th:value="${busca}">
+                            <input type="hidden" name="atividadeId" th:if="${atividadeId != null}" th:value="${atividadeId}">
+                            <div th:replace="~{moradores/campos :: campos}"></div>
+                            <button type="submit" class="btn btn-outline-primary w-100">Cadastrar</button>
+                        </form>
+                    </th:block>
+                </th:block>
+            </section>
+
+            <!-- 2. Atividade -->
+            <section aria-labelledby="h-atividade">
+                <h2 id="h-atividade">2. Atividade</h2>
+                <form method="post" th:action="@{/inscricoes}" novalidate>
+                    <input type="hidden" name="moradorId" th:if="${moradorSelecionado != null}" th:value="${moradorSelecionado.id}">
+
+                    <div th:if="${#lists.isEmpty(atividades)}" class="aviso info" role="status">
+                        <span class="ico" aria-hidden="true">i</span>
+                        <div><span class="visually-hidden">Aviso: </span><strong>Nenhuma atividade de hoje em diante.</strong>
+                            <div>Cadastre uma atividade no menu Atividades.</div></div>
+                    </div>
+
+                    <fieldset class="sem-borda" th:unless="${#lists.isEmpty(atividades)}"
+                              th:attr="aria-describedby=${erroConfirmacao != null} ? 'confirmar-erro' : null">
+                        <legend class="visually-hidden">Escolha a atividade</legend>
+                        <label class="opcao" th:each="a : ${atividades}">
+                            <input type="radio" name="atividadeId" th:value="${a.id()}"
+                                   th:checked="${atividadeId != null and atividadeId == a.id()}">
+                            <span>
+                                <span class="t" th:text="${a.nome()}">Oficina de artes</span>
+                                <span class="m" th:text="${a.dataFormatada()}">15/11/2026</span>
+                                <span th:if="${a.esgotada()}" class="m vagas zero"><span aria-hidden="true">⚠ </span>Vagas esgotadas (0)</span>
+                                <span th:unless="${a.esgotada()}" class="m vagas" th:text="'Vagas restantes: ' + ${a.restantes()}">Vagas restantes: 17</span>
+                            </span>
+                        </label>
+                    </fieldset>
+
+                    <div th:if="${erroConfirmacao}" class="erro-campo espaco-baixo" id="confirmar-erro" role="alert" tabindex="-1" data-foco>
+                        <span aria-hidden="true">✖</span><span th:text="${erroConfirmacao}">Escolha o morador e a atividade antes de confirmar.</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-grande w-100">Confirmar inscrição</button>
+                </form>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>

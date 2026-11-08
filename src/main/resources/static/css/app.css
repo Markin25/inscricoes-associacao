@@ -136,6 +136,10 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
 .vagas.zero { color: var(--err-fg); }
 fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
 .colunas { display: block; }
+.subtitulo { font-size: 1.0625rem; font-weight: 700; margin: 18px 0 8px; }
+.espaco-topo { margin-top: 14px; }
+.espaco-baixo { margin: 0 0 12px; }
+.busca-inscricao { margin-bottom: 8px; }
 .pilha { display: grid; gap: 12px; }
 
 /* Avisos: ícone + texto + cor (nunca só cor) */

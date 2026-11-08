@@ -3,7 +3,7 @@ package br.org.parolin.inscricoes.service;
 import br.org.parolin.inscricoes.dto.AtividadeForm;
 import br.org.parolin.inscricoes.dto.AtividadeResumo;
 import br.org.parolin.inscricoes.exception.CampoInvalidoException;
-import br.org.parolin.inscricoes.exception.RegraNegocioException;
+import br.org.parolin.inscricoes.exception.NaoEncontradoException;
 import br.org.parolin.inscricoes.model.Atividade;
 import br.org.parolin.inscricoes.repository.AtividadeRepository;
 import java.time.LocalDate;
@@ -59,6 +59,6 @@ public class AtividadeService {
     @Transactional(readOnly = true)
     public AtividadeResumo resumo(Long id) {
         return atividadeRepository.buscarResumo(id)
-                .orElseThrow(() -> new RegraNegocioException("Atividade não encontrada."));
+                .orElseThrow(() -> new NaoEncontradoException("Atividade não encontrada."));
     }
 }

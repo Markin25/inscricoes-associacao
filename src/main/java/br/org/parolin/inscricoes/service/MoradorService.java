@@ -2,7 +2,7 @@ package br.org.parolin.inscricoes.service;
 
 import br.org.parolin.inscricoes.dto.Mensagens;
 import br.org.parolin.inscricoes.exception.CampoInvalidoException;
-import br.org.parolin.inscricoes.exception.RegraNegocioException;
+import br.org.parolin.inscricoes.exception.NaoEncontradoException;
 import br.org.parolin.inscricoes.exception.TelefoneJaCadastradoException;
 import br.org.parolin.inscricoes.model.Morador;
 import br.org.parolin.inscricoes.repository.MoradorRepository;
@@ -50,7 +50,7 @@ public class MoradorService {
     @Transactional(readOnly = true)
     public Morador buscarPorId(Long id) {
         return moradorRepository.findById(id)
-                .orElseThrow(() -> new RegraNegocioException("Morador não encontrado."));
+                .orElseThrow(() -> new NaoEncontradoException("Morador não encontrado."));
     }
 
     /** Lista paginada em ordem alfabética; com texto, filtra por nome ou telefone. */
