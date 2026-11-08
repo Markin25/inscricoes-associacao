@@ -10,6 +10,9 @@
   --warn-bg: #fff2d9; --warn-fg: #664000; --warn-bd: #b26a00;
   --info-bg: #e2eff3; --info-fg: #0e4654; --info-bd: #0b5563;
   --focus: #b3400a;
+  /* Borda de campo de formulário: 3,6:1 sobre o branco (a --border do protótipo tinha 2:1). */
+  --field-border: #778a8d;
+  --ico-fg: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -21,6 +24,9 @@
     --warn-bg: #3a2a0a; --warn-fg: #ffd98e; --warn-bd: #e0a030;
     --info-bg: #11323a; --info-fg: #b5e6f0; --info-bd: #5cc3d6;
     --focus: #ffb27a;
+    --field-border: #6a858a;
+    /* No escuro os círculos dos ícones são claros: símbolo escuro para manter o contraste. */
+    --ico-fg: #0d1a1c;
   }
 }
 
@@ -31,7 +37,10 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 1.0625rem;
   line-height: 1.45;
+  /* Nome de usuário ou de morador longo quebra em vez de criar rolagem horizontal (texto a 200%). */
+  overflow-wrap: anywhere;
 }
+.aviso:focus, [data-foco]:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
 
 /* Foco sempre visível (substitui o box-shadow do Bootstrap) */
 :focus-visible,
@@ -68,7 +77,7 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
 .form-label { display: block; font-weight: 700; margin-bottom: 6px; }
 .form-control, .form-select {
   min-height: 48px; font-size: 1.0625rem; color: var(--text); background-color: var(--surface);
-  border: 2px solid var(--border); border-radius: 8px;
+  border: 2px solid var(--field-border); border-radius: 8px;
 }
 .form-control:focus { border-color: var(--primary); color: var(--text); background-color: var(--surface); }
 .form-control[aria-invalid="true"] { border-color: var(--err-bd); }
@@ -149,7 +158,7 @@ fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
 }
 .aviso .ico {
   flex: 0 0 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
-  font-weight: 700; color: #fff; font-size: 1rem; line-height: 1;
+  font-weight: 700; color: var(--ico-fg); font-size: 1rem; line-height: 1;
 }
 .aviso strong { display: block; }
 .aviso.ok   { background: var(--ok-bg);   color: var(--ok-fg);   border-color: var(--ok-bd); }   .aviso.ok .ico   { background: var(--ok-bd); }

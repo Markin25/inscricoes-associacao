@@ -10,7 +10,7 @@
             <h1>Entrar no sistema</h1>
             <p class="lead">Acesso exclusivo da equipe da associação.</p>
 
-            <div th:if="${param.erro}" class="aviso err" role="alert">
+            <div th:if="${param.erro}" class="aviso err" role="alert" tabindex="-1" data-foco>
                 <span class="ico" aria-hidden="true">✖</span>
                 <div><span class="visually-hidden">Erro: </span><strong>Usuário ou senha incorretos.</strong></div>
             </div>
