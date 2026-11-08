@@ -170,6 +170,12 @@ fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
   .busca { grid-template-columns: 1fr auto; align-items: end; }
   .colunas.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 48px; align-items: start; }
   .colunas.duas h2 { margin-top: 0; }
+  /* Resultado: aviso e botões à esquerda, lista de inscritos à direita */
+  .colunas.resultado { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; gap: 0 48px; align-items: start; }
+  .res-alerta { grid-column: 1; grid-row: 1; }
+  .res-lista { grid-column: 2; grid-row: 1 / span 2; }
+  .res-lista h2 { margin-top: 0; }
+  .res-botoes { grid-column: 1; grid-row: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {

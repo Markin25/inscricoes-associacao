@@ -1,6 +1,8 @@
 package br.org.parolin.inscricoes.service;
 
+import br.org.parolin.inscricoes.dto.InscritoResumo;
 import br.org.parolin.inscricoes.dto.ResultadoInscricao;
+import java.util.List;
 import br.org.parolin.inscricoes.exception.InscricaoDuplicadaException;
 import br.org.parolin.inscricoes.exception.NaoEncontradoException;
 import br.org.parolin.inscricoes.exception.VagasEsgotadasException;
@@ -58,5 +60,11 @@ public class InscricaoService {
         }
         long restantes = atividade.getVagasTotal() - (inscritos + 1);
         return new ResultadoInscricao(restantes, morador.getNome(), atividade.getNome());
+    }
+
+    /** Nome e telefone dos inscritos, na ordem de inscrição. */
+    @Transactional(readOnly = true)
+    public List<InscritoResumo> listarInscritos(Long atividadeId) {
+        return inscricaoRepository.listarInscritos(atividadeId);
     }
 }

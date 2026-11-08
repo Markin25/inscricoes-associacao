@@ -5,6 +5,8 @@ import br.org.parolin.inscricoes.dto.AtividadeForm;
 import br.org.parolin.inscricoes.exception.CampoInvalidoException;
 import br.org.parolin.inscricoes.model.Atividade;
 import br.org.parolin.inscricoes.service.AtividadeService;
+import br.org.parolin.inscricoes.service.InscricaoService;
+import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,15 +22,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AtividadeController {
 
     private final AtividadeService atividadeService;
+    private final InscricaoService inscricaoService;
 
-    public AtividadeController(AtividadeService atividadeService) {
+    public AtividadeController(AtividadeService atividadeService, InscricaoService inscricaoService) {
         this.atividadeService = atividadeService;
+        this.inscricaoService = inscricaoService;
     }
 
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("atividades", atividadeService.listar());
         return "atividades/lista";
+    }
+
+    /** Lista de inscritos (RF05). Também é a tela de resultado depois de confirmar uma inscrição. */
+    @GetMapping("/{id}/inscritos")
+    public String inscritos(@PathVariable Long id, Model model) {
+        model.addAttribute("atividade", atividadeService.resumo(id));
+        model.addAttribute("inscritos", inscricaoService.listarInscritos(id));
+        return "atividade-inscritos";
     }
 
     @GetMapping("/nova")
