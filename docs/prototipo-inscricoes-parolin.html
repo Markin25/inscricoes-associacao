@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Protótipo: inscrições da associação do Parolin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+  --bg:#e9efee; --surface:#ffffff; --surface-2:#f4f8f7; --text:#16262a; --muted:#44575b; --border:#a9b9bb;
+  --primary:#0b5563; --primary-hover:#083f4a; --on-primary:#ffffff;
+  --ok-bg:#e4f3e8; --ok-fg:#14502a; --ok-bd:#2e7d46;
+  --err-bg:#fcebea; --err-fg:#8f1a22; --err-bd:#c62828;
+  --warn-bg:#fff2d9; --warn-fg:#664000; --warn-bd:#b26a00;
+  --info-bg:#e2eff3; --info-fg:#0e4654; --info-bd:#0b5563;
+  --focus:#b3400a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0d1a1c; --surface:#142428; --surface-2:#1a2e33; --text:#e8f1f2; --muted:#b2c4c7; --border:#476166;
+    --primary:#5cc3d6; --primary-hover:#86d4e3; --on-primary:#06242b;
+    --ok-bg:#12301c; --ok-fg:#a9e4bb; --ok-bd:#58b574;
+    --err-bg:#3a1618; --err-fg:#ffb8bc; --err-bd:#ef7b82;
+    --warn-bg:#3a2a0a; --warn-fg:#ffd98e; --warn-bd:#e0a030;
+    --info-bg:#11323a; --info-fg:#b5e6f0; --info-bd:#5cc3d6;
+    --focus:#ffb27a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0d1a1c; --surface:#142428; --surface-2:#1a2e33; --text:#e8f1f2; --muted:#b2c4c7; --border:#476166;
+  --primary:#5cc3d6; --primary-hover:#86d4e3; --on-primary:#06242b;
+  --ok-bg:#12301c; --ok-fg:#a9e4bb; --ok-bd:#58b574;
+  --err-bg:#3a1618; --err-fg:#ffb8bc; --err-bd:#ef7b82;
+  --warn-bg:#3a2a0a; --warn-fg:#ffd98e; --warn-bd:#e0a030;
+  --info-bg:#11323a; --info-fg:#b5e6f0; --info-bd:#5cc3d6;
+  --focus:#ffb27a;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.45}
+.stage{max-width:430px;margin:0 auto;padding:12px 12px 32px}
+
+/* Painel de atalhos (fora do app) */
+.deck{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:15px}
+.deck summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+.deck p{margin:6px 0;color:var(--muted)}
+.deck .group{margin:10px 0 4px;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:15px;min-height:44px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2);color:var(--text);cursor:pointer}
+.chip:hover{border-color:var(--primary)}
+
+/* Aparelho */
+.phone{background:var(--surface);border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(10,40,45,.18)}
+.appbar{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:60px;padding:8px 16px;background:var(--primary);color:var(--on-primary)}
+.brand{font-weight:700;font-size:18px;line-height:1.2}
+.brand small{display:block;font-weight:400;font-size:14px;opacity:.95}
+.appbar .btn.ghost{min-height:44px;min-width:44px;padding:8px 14px;border-color:currentColor;color:inherit;background:transparent}
+.content{padding:18px 16px 24px}
+h1{font-size:24px;line-height:1.2;margin:0 0 6px}
+h1:focus{outline:none}
+h2{font-size:19px;margin:22px 0 8px}
+.lead{margin:0 0 16px;color:var(--muted)}
+
+/* Campos */
+.field{margin:0 0 14px}
+label,.label{display:block;font-weight:700;margin-bottom:6px}
+.hint{display:block;font-weight:400;color:var(--muted);font-size:15px;margin-top:2px}
+input[type="text"],input[type="password"],input[type="search"]{width:100%;min-height:48px;padding:10px 12px;font:inherit;font-size:17px;color:var(--text);background:var(--surface);border:2px solid var(--border);border-radius:8px}
+input[aria-invalid="true"]{border-color:var(--err-bd)}
+.field-error{display:flex;gap:6px;margin-top:6px;color:var(--err-fg);font-weight:700;font-size:16px}
+
+/* Botões */
+.btn{font:inherit;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:8px;border:2px solid var(--primary);background:var(--surface);color:var(--primary);cursor:pointer;text-align:center}
+.btn.primary{background:var(--primary);color:var(--on-primary)}
+.btn.primary:hover{background:var(--primary-hover);border-color:var(--primary-hover)}
+.btn.block{display:flex;width:100%}
+.btn.big{min-height:56px;font-size:18px}
+.stack{display:grid;gap:12px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* Alertas: ícone + texto + cor */
+.alert{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:8px;border:2px solid;margin:0 0 14px;font-size:17px}
+.alert:focus{outline:none}
+.alert .ico{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:16px;line-height:1}
+.alert strong{display:block}
+.alert.ok{background:var(--ok-bg);color:var(--ok-fg);border-color:var(--ok-bd)} .alert.ok .ico{background:var(--ok-bd)}
+.alert.err{background:var(--err-bg);color:var(--err-fg);border-color:var(--err-bd)} .alert.err .ico{background:var(--err-bd)}
+.alert.warn{background:var(--warn-bg);color:var(--warn-fg);border-color:var(--warn-bd)} .alert.warn .ico{background:var(--warn-bd)}
+.alert.info{background:var(--info-bg);color:var(--info-fg);border-color:var(--info-bd)} .alert.info .ico{background:var(--info-bd)}
+.alert .act{margin-top:10px}
+
+/* Cartões */
+.card{border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--surface-2);margin-bottom:10px}
+.card .name{font-weight:700}
+.card .sub{color:var(--muted)}
+.card.sel{border:2px solid var(--primary);background:var(--info-bg)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;min-height:56px;padding:12px 14px;border:2px solid var(--border);border-radius:10px;margin-bottom:10px;cursor:pointer;background:var(--surface)}
+.opt:has(input:checked){border-color:var(--primary);background:var(--info-bg)}
+.opt input{width:24px;height:24px;margin:2px 0 0;accent-color:var(--primary);flex:0 0 24px}
+.opt .t{font-weight:700;display:block}
+.opt .m{display:block;color:var(--muted);font-size:16px}
+.vagas{font-weight:700}
+.vagas.zero{color:var(--err-fg)}
+.list{list-style:none;margin:0;padding:0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.list li{padding:10px 14px;border-top:1px solid var(--border)}
+.list li:first-child{border-top:0}
+.list .sub{color:var(--muted);display:block;font-size:16px}
+.count{color:var(--muted);margin:0 0 8px}
+.note{margin-top:14px;color:var(--muted);font-size:14px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cols{display:block}
+.narrow{max-width:440px}
+@media (min-width:900px){
+  .stage{max-width:1120px;padding:24px 28px 40px}
+  .phone{border-radius:12px}
+  .appbar{min-height:72px;padding:10px 32px}
+  .brand{font-size:20px}
+  .content{padding:30px 36px 40px}
+  h1{font-size:30px}
+  h2{font-size:21px;margin-top:0}
+  .lead{font-size:18px}
+  .stack.menu{grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+  .stack.menu .btn{min-height:96px;font-size:20px}
+  .cols.two{display:grid;grid-template-columns:1fr 1fr;gap:20px 48px;align-items:start}
+  .cols.res{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;gap:0 48px;align-items:start}
+  .res-alert{grid-column:1;grid-row:1}
+  .res-list{grid-column:2;grid-row:1 / span 2}
+  .res-list h2{margin-top:0}
+  .res-btns{grid-column:1;grid-row:2;align-self:start;margin-top:4px !important}
+  .res-btns .btn{width:100%}
+}
+@media (prefers-reduced-motion:no-preference){.btn,.chip{transition:background .12s,border-color .12s}}
+@media (max-width:420px){.stage{padding:0 0 24px}.phone{border-radius:0;border-left:0;border-right:0}.deck{margin:8px 12px 12px}}
+</style>
+</head>
+<body>
+<div class="stage">
+
+<details class="deck">
+  <summary>Atalhos para as capturas (este painel não faz parte do app)</summary>
+  <p>Para entrar de verdade: usuário <b>atendimento.demo</b> e qualquer senha. Para o print, use o DevTools em 360 px de largura e capture só o aparelho.</p>
+  <div class="group">Tela 1</div>
+  <div class="chips">
+    <button class="chip" data-action="preset" data-p="login">Login</button>
+    <button class="chip" data-action="preset" data-p="login-erro">Login com erro</button>
+    <button class="chip" data-action="preset" data-p="menu">Menu inicial</button>
+  </div>
+  <div class="group">Tela 2</div>
+  <div class="chips">
+    <button class="chip" data-action="preset" data-p="insc-cadastro">Cadastro de novo morador</button>
+    <button class="chip" data-action="preset" data-p="insc-dup">Aviso de duplicidade</button>
+    <button class="chip" data-action="preset" data-p="insc-pronta">Pronta para confirmar</button>
+  </div>
+  <div class="group">Tela 3</div>
+  <div class="chips">
+    <button class="chip" data-action="preset" data-p="sucesso">Inscrição feita</button>
+    <button class="chip" data-action="preset" data-p="esgotadas">Vagas esgotadas</button>
+    <button class="chip" data-action="preset" data-p="repetido">Já inscrito</button>
+    <button class="chip" data-action="preset" data-p="erro">Erro genérico</button>
+  </div>
+  <p style="margin-top:12px">Todos os nomes e telefones são fictícios. <button class="chip" data-action="reiniciar">Reiniciar dados</button></p>
+</details>
+
+<main class="phone" aria-label="Protótipo do aplicativo">
+  <header class="appbar" id="appbar"></header>
+  <div class="content" id="app"></div>
+</main>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  function initData(){
+    return {
+      moradores:[
+        {id:1,nome:'Ana Souza',tel:'41900000001'},
+        {id:2,nome:'Carlos Lima',tel:'41900000002'},
+        {id:3,nome:'Marta Dias',tel:'41900000004'}
+      ],
+      atividades:[
+        {id:1,nome:'Oficina de artes',data:'15/11/2026',total:20},
+        {id:2,nome:'Aula de reforço',data:'22/11/2026',total:3}
+      ],
+      inscricoes:[
+        {m:1,a:1},{m:2,a:1},{m:3,a:1},
+        {m:1,a:2},{m:2,a:2},{m:3,a:2}
+      ],
+      nextId:10
+    };
+  }
+  function initState(){
+    return {screen:'login',logged:false,user:'',loginError:false,stub:false,
+      morador:null,busca:'',buscaFeita:false,buscaErro:'',
+      cad:{nome:'',tel:'',erros:{}},dup:null,cadOk:false,
+      ativ:null,erroConfirm:'',resultado:null};
+  }
+  var D=initData(), S=initState();
+
+  var app=document.getElementById('app');
+  var bar=document.getElementById('appbar');
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function normTel(raw){var d=String(raw).replace(/\D/g,''); if((d.length===12||d.length===13)&&d.indexOf('55')===0){d=d.slice(2);} return d;}
+  function fmtTel(t){ if(t.length===11) return '('+t.slice(0,2)+') '+t.slice(2,7)+'-'+t.slice(7); if(t.length===10) return '('+t.slice(0,2)+') '+t.slice(2,6)+'-'+t.slice(6); return t; }
+  function morador(id){return D.moradores.filter(function(m){return m.id===id;})[0]||null;}
+  function ativ(id){return D.atividades.filter(function(a){return a.id===id;})[0]||null;}
+  function inscritos(aId){return D.inscricoes.filter(function(i){return i.a===aId;});}
+  function vagas(a){return a.total-inscritos(a.id).length;}
+  function achar(q){
+    q=q.trim(); if(!q) return [];
+    var low=q.toLowerCase(), dig=normTel(q);
+    return D.moradores.filter(function(m){return m.nome.toLowerCase().indexOf(low)>-1||(dig.length>=4&&m.tel.indexOf(dig)>-1);});
+  }
+  function garantirBeatriz(){
+    var b=D.moradores.filter(function(m){return m.tel==='41900000003';})[0];
+    if(!b){b={id:D.nextId++,nome:'Beatriz Rocha',tel:'41900000003'};D.moradores.push(b);}
+    return b;
+  }
+
+  function alerta(tipo,titulo,extra,opts){
+    opts=opts||{};
+    var ico={ok:'✔',err:'✖',warn:'!',info:'i'}[tipo];
+    var nome={ok:'Sucesso',err:'Erro',warn:'Atenção',info:'Aviso'}[tipo];
+    return '<div class="alert '+tipo+'" '+(opts.role?'role="alert" tabindex="-1" data-focus ':'')+'>'
+      +'<span class="ico" aria-hidden="true">'+ico+'</span>'
+      +'<div><span class="sr">'+nome+': </span><strong>'+titulo+'</strong>'+(extra||'')+'</div></div>';
+  }
+  function erroCampo(msg){return '<div class="field-error" id="__ID__"><span aria-hidden="true">✖</span><span>'+msg+'</span></div>';}
+
+  /* ---------- Telas ---------- */
+  function viewLogin(){
+    return '<div class="narrow"><h1 tabindex="-1" data-focus>Entrar no sistema</h1>'
+      +'<p class="lead">Acesso exclusivo da equipe da associação.</p>'
+      +(S.loginError?alerta('err','Usuário ou senha incorretos.','',{role:true}):'')
+      +'<form data-form="login" novalidate>'
+      +'<div class="field"><label for="usuario">Usuário</label>'
+      +'<input id="usuario" name="usuario" type="text" autocomplete="username" autocapitalize="none" value="'+esc(S.user)+'"></div>'
+      +'<div class="field"><label for="senha">Senha</label>'
+      +'<input id="senha" name="senha" type="password" autocomplete="current-password"></div>'
+      +'<button class="btn primary big block" type="submit">Entrar</button>'
+      +'</form></div>';
+  }
+
+  function viewMenu(){
+    return '<h1 tabindex="-1" data-focus>Olá, atendimento</h1>'
+      +'<p class="lead">O que você quer fazer agora?</p>'
+      +(S.stub?alerta('info','Esta tela não faz parte do protótipo das três telas.'):'')
+      +'<nav class="stack menu" aria-label="Menu principal">'
+      +'<button class="btn primary big block" data-action="go-inscrever">Inscrever morador</button>'
+      +'<button class="btn big block" data-action="stub">Moradores</button>'
+      +'<button class="btn big block" data-action="stub">Atividades</button>'
+      +'</nav>';
+  }
+
+  function blocoMorador(){
+    if(S.morador){
+      return '<div class="card sel"><div class="row"><div><div class="name">'+esc(S.morador.nome)+'</div>'
+        +'<div class="sub">'+esc(fmtTel(S.morador.tel))+'</div></div>'
+        +'<button class="btn" data-action="trocar">Trocar</button></div></div>'
+        +(S.cadOk?alerta('ok','Morador cadastrado.'):'');
+    }
+    var h='<form data-form="buscar" novalidate>'
+      +'<div class="field"><label for="busca">Buscar morador por nome ou telefone</label>'
+      +'<input id="busca" name="busca" type="search" autocomplete="off" value="'+esc(S.busca)+'"'
+      +(S.buscaErro?' aria-invalid="true" aria-describedby="busca-err"':'')+'>'
+      +(S.buscaErro?erroCampo(esc(S.buscaErro)).replace('__ID__','busca-err'):'')+'</div>'
+      +'<button class="btn block" type="submit">Buscar</button></form>';
+    if(S.buscaFeita){
+      var r=achar(S.busca);
+      if(r.length){
+        h+='<h2>Resultado da busca</h2>';
+        r.forEach(function(m){
+          h+='<div class="card"><div class="row"><div><div class="name">'+esc(m.nome)+'</div><div class="sub">'+esc(fmtTel(m.tel))+'</div></div>'
+            +'<button class="btn" data-action="sel-morador" data-id="'+m.id+'">Selecionar</button></div></div>';
+        });
+      } else {
+        h+='<div style="margin-top:14px">'+alerta('info','Nenhum morador encontrado.','Cadastre o morador abaixo.')+'</div>'+formCadastro();
+      }
+    }
+    return h;
+  }
+
+  function formCadastro(){
+    var e=S.cad.erros||{};
+    var h='<h2>Cadastrar novo morador</h2>';
+    if(S.dup){
+      h+=alerta('warn','Este telefone já está cadastrado para '+esc(S.dup.nome)+'.',
+        '<div>Use o cadastro existente para não duplicar.</div><div class="act"><button class="btn" data-action="usar-dup">Usar cadastro existente</button></div>',{role:true});
+    }
+    h+='<form data-form="cadastrar" novalidate>'
+      +'<div class="field"><label for="cad_nome">Nome</label>'
+      +'<input id="cad_nome" name="cad_nome" type="text" autocomplete="off" value="'+esc(S.cad.nome)+'"'
+      +(e.nome?' aria-invalid="true" aria-describedby="nome-err"':'')+'>'
+      +(e.nome?erroCampo(esc(e.nome)).replace('__ID__','nome-err'):'')+'</div>'
+      +'<div class="field"><label for="cad_tel">Telefone<span class="hint">DDD e número, só números</span></label>'
+      +'<input id="cad_tel" name="cad_tel" type="text" inputmode="tel" autocomplete="off" value="'+esc(S.cad.tel)+'"'
+      +(e.tel?' aria-invalid="true" aria-describedby="tel-err"':'')+'>'
+      +(e.tel?erroCampo(esc(e.tel)).replace('__ID__','tel-err'):'')+'</div>'
+      +'<button class="btn block" type="submit">Cadastrar</button></form>';
+    return h;
+  }
+
+  function viewInscrever(){
+    var h='<h1 tabindex="-1" data-focus>Inscrever morador</h1>'
+      +'<p class="lead"><button class="btn" data-action="go-menu" style="min-height:44px;padding:6px 12px">Voltar ao menu</button></p>'
+      +'<div class="cols two"><section aria-labelledby="h-morador"><h2 id="h-morador" style="margin-top:6px">1. Morador</h2>'+blocoMorador()+'</section>'
+      +'<section aria-labelledby="h-ativ"><h2 id="h-ativ" style="margin-top:6px">2. Atividade</h2>'
+      +'<form data-form="confirmar" novalidate>'
+      +'<fieldset style="border:0;padding:0;margin:0"><legend class="sr">Escolha a atividade</legend>';
+    D.atividades.forEach(function(a){
+      var v=vagas(a);
+      h+='<label class="opt"><input type="radio" name="ativ" value="'+a.id+'"'+(S.ativ===a.id?' checked':'')+'>'
+        +'<span><span class="t">'+esc(a.nome)+'</span>'
+        +'<span class="m">'+esc(a.data)+'</span>'
+        +'<span class="m vagas'+(v<=0?' zero':'')+'">'+(v<=0?'⚠ Vagas esgotadas (0)':'Vagas restantes: '+v)+'</span></span></label>';
+    });
+    h+='</fieldset>'
+      +(S.erroConfirm?'<div class="field-error" style="margin:0 0 12px"><span aria-hidden="true">✖</span><span>'+esc(S.erroConfirm)+'</span></div>':'')
+      +'<button class="btn primary big block" type="submit">Confirmar inscrição</button></form></section></div>';
+    return h;
+  }
+
+  function viewResultado(){
+    var r=S.resultado||{tipo:'erro'};
+    var a=r.ativId?ativ(r.ativId):null;
+    var h='<h1>Resultado</h1><div class="cols res"><div class="res-alert">';
+    if(r.tipo==='sucesso'){
+      h+=alerta('ok','Inscrição feita. Vagas restantes: '+vagas(a),'<div>'+esc(r.nome)+' está inscrito(a) em '+esc(a.nome)+'.</div>',{role:true});
+    } else if(r.tipo==='esgotadas'){
+      h+=alerta('err','Vagas esgotadas: não foi possível inscrever.','<div>Escolha outra atividade ou avise a coordenação.</div>',{role:true});
+    } else if(r.tipo==='repetido'){
+      h+=alerta('warn','Morador já inscrito nesta atividade.','<div>Nenhuma vaga foi usada.</div>',{role:true});
+    } else {
+      h+=alerta('err','Não foi possível concluir. Tente novamente.','',{role:true});
+    }
+    h+='</div>';
+    if(a){
+      var l=inscritos(a.id);
+      h+='<div class="res-list"><h2>Inscritos em '+esc(a.nome)+'</h2>'
+        +'<p class="count">'+l.length+' de '+a.total+' vagas usadas · '+vagas(a)+' restantes</p>'
+        +'<ul class="list">';
+      l.forEach(function(i){var m=morador(i.m); h+='<li>'+esc(m.nome)+'<span class="sub">'+esc(fmtTel(m.tel))+'</span></li>';});
+      h+='</ul></div>';
+    }
+    h+='<div class="stack res-btns" style="margin-top:18px">'
+      +'<button class="btn primary big block" data-action="nova">Nova inscrição</button>'
+      +'<button class="btn big block" data-action="go-menu">Voltar ao menu</button></div></div>';
+    return h;
+  }
+
+  function render(){
+    bar.innerHTML='<div class="brand">Inscrições<small>Associação de moradores do Parolin</small></div>'
+      +(S.logged?'<button class="btn ghost" data-action="logout">Sair</button>':'');
+    var v={login:viewLogin,menu:viewMenu,inscrever:viewInscrever,resultado:viewResultado}[S.screen];
+    app.innerHTML=v();
+    var f=app.querySelector('[data-focus]');
+    if(f){try{f.focus({preventScroll:true});}catch(e){f.focus();}}
+  }
+
+  /* ---------- Regras ---------- */
+  function confirmar(){
+    if(!S.morador||!S.ativ){S.erroConfirm='Escolha o morador e a atividade antes de confirmar.';render();return;}
+    S.erroConfirm='';
+    var a=ativ(S.ativ), tipo;
+    var ja=D.inscricoes.some(function(i){return i.m===S.morador.id&&i.a===a.id;});
+    if(ja){tipo='repetido';}
+    else if(vagas(a)<=0){tipo='esgotadas';}
+    else {D.inscricoes.push({m:S.morador.id,a:a.id});tipo='sucesso';}
+    S.resultado={tipo:tipo,ativId:a.id,nome:S.morador.nome};
+    S.screen='resultado';
+    render();
+  }
+
+  function cadastrar(){
+    var erros={}, nome=S.cad.nome.trim(), tel=normTel(S.cad.tel);
+    S.dup=null;
+    if(!nome){erros.nome='Informe o nome do morador.';}
+    else if(/[<>]/.test(nome)){erros.nome='O nome não pode ter os símbolos < ou >.';}
+    if(!/^\d{10,11}$/.test(tel)){erros.tel='Telefone inválido: informe DDD e número, só números.';}
+    S.cad.erros=erros;
+    if(!erros.nome&&!erros.tel){
+      var ex=D.moradores.filter(function(m){return m.tel===tel;})[0];
+      if(ex){S.dup=ex;}
+      else {var m={id:D.nextId++,nome:nome,tel:tel};D.moradores.push(m);S.morador=m;S.cadOk=true;S.cad={nome:'',tel:'',erros:{}};}
+    }
+    render();
+  }
+
+  function entrar(fd){
+    S.user=String(fd.get('usuario')||'').trim();
+    var senha=String(fd.get('senha')||'');
+    if(S.user==='atendimento.demo'&&senha.length>0){S.logged=true;S.loginError=false;S.screen='menu';S.stub=false;}
+    else {S.loginError=true;}
+    render();
+  }
+
+  function limparInscricao(){
+    S.morador=null;S.ativ=null;S.busca='';S.buscaFeita=false;S.buscaErro='';
+    S.cad={nome:'',tel:'',erros:{}};S.dup=null;S.cadOk=false;S.erroConfirm='';S.resultado=null;
+  }
+
+  function preset(p){
+    D=initData();S=initState();
+    if(p!=='login'&&p!=='login-erro'){S.logged=true;S.user='atendimento.demo';S.screen='menu';}
+    if(p==='login-erro'){S.loginError=true;S.user='atendimento.demo';}
+    if(p==='insc-cadastro'){S.screen='inscrever';S.busca='Beatriz';S.buscaFeita=true;S.cad.nome='Beatriz Rocha';S.cad.tel='(41) 90000-0003';S.ativ=1;}
+    if(p==='insc-dup'){S.screen='inscrever';S.busca='Beatriz';S.buscaFeita=true;S.cad.nome='Beatriz Rocha';S.cad.tel='(41) 90000-0001';S.dup=D.moradores[0];S.ativ=1;}
+    if(p==='insc-pronta'){S.screen='inscrever';S.morador=garantirBeatriz();S.cadOk=true;S.ativ=1;}
+    if(p==='sucesso'){S.morador=garantirBeatriz();S.ativ=1;confirmar();return;}
+    if(p==='esgotadas'){S.morador=garantirBeatriz();S.ativ=2;confirmar();return;}
+    if(p==='repetido'){S.morador=D.moradores[0];S.ativ=1;confirmar();return;}
+    if(p==='erro'){S.screen='resultado';S.resultado={tipo:'erro'};}
+    render();
+  }
+
+  /* ---------- Eventos ---------- */
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-action]'); if(!t) return;
+    var a=t.getAttribute('data-action');
+    if(a==='preset'){preset(t.getAttribute('data-p'));}
+    else if(a==='reiniciar'){preset('login');}
+    else if(a==='go-inscrever'){S.screen='inscrever';S.stub=false;render();}
+    else if(a==='go-menu'){S.screen='menu';S.stub=false;render();}
+    else if(a==='logout'){D=initData();S=initState();render();}
+    else if(a==='stub'){S.stub=true;render();}
+    else if(a==='sel-morador'){S.morador=morador(Number(t.getAttribute('data-id')));S.cadOk=false;render();}
+    else if(a==='trocar'){S.morador=null;S.cadOk=false;render();}
+    else if(a==='usar-dup'){S.morador=S.dup;S.dup=null;S.cadOk=false;render();}
+    else if(a==='nova'){limparInscricao();S.screen='inscrever';render();}
+  });
+  document.addEventListener('submit',function(e){
+    var f=e.target.closest('form[data-form]'); if(!f) return;
+    e.preventDefault();
+    var k=f.getAttribute('data-form'), fd=new FormData(f);
+    if(k==='login'){entrar(fd);}
+    else if(k==='buscar'){
+      S.busca=String(fd.get('busca')||'');
+      if(!S.busca.trim()){S.buscaErro='Digite um nome ou telefone para buscar.';S.buscaFeita=false;}
+      else{S.buscaErro='';S.buscaFeita=true;
+        var d=normTel(S.busca); if(/^\d{10,11}$/.test(d)){S.cad.tel=d;} else if(!/\d/.test(S.busca)){S.cad.nome=S.busca.trim();}}
+      render();
+    }
+    else if(k==='cadastrar'){cadastrar();}
+    else if(k==='confirmar'){confirmar();}
+  });
+  document.addEventListener('input',function(e){
+    var n=e.target.name;
+    if(n==='usuario'){S.user=e.target.value;}
+    else if(n==='busca'){S.busca=e.target.value;}
+    else if(n==='cad_nome'){S.cad.nome=e.target.value;}
+    else if(n==='cad_tel'){S.cad.tel=e.target.value;}
+  });
+  document.addEventListener('change',function(e){
+    if(e.target.name==='ativ'){S.ativ=Number(e.target.value);S.erroConfirm='';}
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
