@@ -30,6 +30,7 @@ class SegurancaTest extends IntegracaoBase {
 
     @Autowired UsuarioService usuarioService;
     @Autowired UsuarioRepository usuarioRepository;
+    @Autowired java.time.Clock relogio;
 
     private String usuario;
     private String senha;
@@ -83,7 +84,10 @@ class SegurancaTest extends IntegracaoBase {
 
     @Test
     void bloqueioVencidoDeixaEntrarDeNovo() throws Exception {
-        jdbc.update("UPDATE usuarios SET bloqueado_ate = now() - interval '1 minute' WHERE nome_usuario = ?", usuario);
+        // Usa o mesmo relógio do sistema (fuso de Curitiba), e não o now() do banco, que segue o
+        // fuso da conexão: em servidor UTC os dois ficariam 3 horas diferentes.
+        jdbc.update("UPDATE usuarios SET bloqueado_ate = ? WHERE nome_usuario = ?",
+                java.time.LocalDateTime.now(relogio).minusMinutes(1), usuario);
 
         entrar(usuario, senha).andExpect(authenticated());
     }
