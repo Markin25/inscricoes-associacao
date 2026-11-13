@@ -1,6 +1,19 @@
 /* Estilo próprio sobre o Bootstrap local. Cores e medidas seguem o protótipo
    (docs/prototipo-inscricoes-parolin.html), com contraste AA e alvos de 48 px. */
 
+/* Atkinson Hyperlegible: fonte do Braille Institute, desenhada para leitura fácil e baixa visão.
+   Arquivos locais (licença SIL OFL 1.1 em /fonts/OFL.txt), sem CDN. */
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("../fonts/atkinson-hyperlegible-400.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("../fonts/atkinson-hyperlegible-700.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --bg: #e9efee; --surface: #ffffff; --surface-2: #f4f8f7; --text: #16262a; --muted: #44575b; --border: #a9b9bb;
@@ -34,7 +47,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 1.0625rem;
   line-height: 1.45;
   /* Nome de usuário ou de morador longo quebra em vez de criar rolagem horizontal (texto a 200%). */

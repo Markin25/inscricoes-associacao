@@ -123,6 +123,14 @@ class SegurancaTest extends IntegracaoBase {
     }
 
     @Test
+    void estilosScriptsEFonteAbremSemLogin() throws Exception {
+        for (String arquivo : new String[] {"/css/app.css", "/css/bootstrap.min.css", "/js/app.js",
+                "/fonts/atkinson-hyperlegible-400.woff2", "/fonts/atkinson-hyperlegible-700.woff2"}) {
+            mvc.perform(get(arquivo)).andExpect(status().isOk());
+        }
+    }
+
+    @Test
     void postSemLoginESemCsrfEhRecusado() throws Exception {
         mvc.perform(post("/inscricoes").param("moradorId", "1").param("atividadeId", "1"))
                 .andExpect(status().isForbidden());
