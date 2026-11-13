@@ -26,6 +26,8 @@
   /* Borda de campo de formulário: 3,6:1 sobre o branco (a --border do protótipo tinha 2:1). */
   --field-border: #778a8d;
   --ico-fg: #ffffff;
+  --trilho: #d5e0e1;
+  --sombra: 0 1px 2px rgba(10, 40, 45, .06), 0 4px 12px rgba(10, 40, 45, .06);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -40,6 +42,8 @@
     --field-border: #6a858a;
     /* No escuro os círculos dos ícones são claros: símbolo escuro para manter o contraste. */
     --ico-fg: #0d1a1c;
+    --trilho: #2a4045;
+    --sombra: none;
   }
 }
 
@@ -130,8 +134,47 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
 .voltar { margin: 0 0 16px; }
 .dica { display: block; font-weight: 400; color: var(--muted); font-size: .9375rem; margin-top: 2px; }
 
-/* Menu */
+/* Menu: cartões com ícone, título e para que serve */
 .menu { display: grid; gap: 12px; }
+.cartao-menu {
+  display: flex; align-items: flex-start; gap: 14px; min-height: 48px; padding: 16px 18px;
+  border: 2px solid var(--border); border-radius: 12px; background: var(--surface);
+  color: var(--text); text-decoration: none; box-shadow: var(--sombra);
+}
+.cartao-menu:hover { border-color: var(--primary); background: var(--info-bg); color: var(--text); }
+.cartao-menu.destaque { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.cartao-menu.destaque:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: var(--on-primary); }
+.icone-menu {
+  flex: 0 0 52px; height: 52px; border-radius: 12px; display: grid; place-items: center;
+  background: var(--info-bg); color: var(--primary);
+}
+.destaque .icone-menu { background: var(--on-primary); color: var(--primary); }
+.texto-menu { display: grid; gap: 2px; }
+.titulo-menu { font-weight: 700; font-size: 1.1875rem; }
+.desc-menu { color: var(--muted); }
+.destaque .desc-menu { color: var(--on-primary); }
+
+/* Próximas atividades no menu */
+.proximas h2 { margin-top: 28px; }
+.lista-proximas { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.proxima {
+  display: grid; gap: 6px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface-2); color: var(--text); text-decoration: none;
+}
+.proxima:hover { border-color: var(--primary); color: var(--text); }
+.proxima-topo { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+
+/* Barra de ocupação das vagas (decorativa: o número está sempre escrito ao lado) */
+progress.ocupacao {
+  appearance: none; -webkit-appearance: none; width: 100%; height: 10px; border: 0; border-radius: 5px;
+  background: var(--trilho); color: var(--primary); overflow: hidden;
+}
+progress.ocupacao::-webkit-progress-bar { background: var(--trilho); border-radius: 5px; }
+progress.ocupacao::-webkit-progress-value { background: var(--primary); border-radius: 5px; }
+progress.ocupacao::-moz-progress-bar { background: var(--primary); border-radius: 5px; }
+progress.ocupacao.cheia { color: var(--err-bd); }
+progress.ocupacao.cheia::-webkit-progress-value { background: var(--err-bd); }
+progress.ocupacao.cheia::-moz-progress-bar { background: var(--err-bd); }
 
 /* Listas */
 .barra-acoes { display: grid; gap: 12px; margin-bottom: 16px; }
@@ -220,7 +263,9 @@ fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
   h1 { font-size: 1.875rem; }
   .lead { font-size: 1.125rem; }
   .menu { grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
-  .menu .btn { min-height: 96px; font-size: 1.25rem; }
+  .cartao-menu { flex-direction: column; min-height: 168px; padding: 20px; }
+  .titulo-menu { font-size: 1.3125rem; }
+  .lista-proximas { grid-template-columns: repeat(2, 1fr); }
   .barra-acoes { grid-template-columns: 1fr auto; align-items: end; }
   .busca { grid-template-columns: 1fr auto; align-items: end; }
   .colunas.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 48px; align-items: start; }
