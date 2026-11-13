@@ -147,8 +147,11 @@ public class InscricaoController {
         model.addAttribute("semResultado", semResultado);
         model.addAttribute("mostrarCadastro", selecionado == null && (novo || semResultado));
 
-        model.addAttribute("atividades", atividadeService.listarAPartirDe(LocalDate.now(relogio)));
+        var atividades = atividadeService.listarAPartirDe(LocalDate.now(relogio));
+        model.addAttribute("atividades", atividades);
         model.addAttribute("atividadeId", atividadeId);
+        model.addAttribute("atividadeSelecionada", atividades.stream()
+                .filter(a -> a.id().equals(atividadeId)).findFirst().orElse(null));
     }
 
     /** Como no protótipo: busca por telefone completo preenche o Telefone; busca só com letras preenche o Nome. */

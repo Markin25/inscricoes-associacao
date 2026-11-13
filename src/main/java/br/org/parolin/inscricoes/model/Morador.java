@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import br.org.parolin.inscricoes.util.NomeUtil;
 import br.org.parolin.inscricoes.util.TelefoneUtil;
 import java.time.LocalDateTime;
 
@@ -52,5 +53,9 @@ public class Morador {
 
     public String getTelefoneFormatado() {
         return TelefoneUtil.formatar(telefone);
+    }
+
+    public String getIniciais() {
+        return NomeUtil.iniciais(nome);
     }
 }

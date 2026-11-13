@@ -19,11 +19,16 @@
                     <span th:text="${atividade.dataFormatada()}">15/11/2026</span> ·
                     <span th:text="${atividade.inscritos()} + ' de ' + ${atividade.vagasTotal()} + ' vagas usadas · ' + ${atividade.restantes()} + ' restantes'">3 de 20 vagas usadas · 17 restantes</span>
                 </p>
+                <progress th:class="${atividade.esgotada()} ? 'ocupacao cheia espaco-baixo' : 'ocupacao espaco-baixo'" aria-hidden="true"
+                          th:attr="max=${atividade.vagasTotal()}, value=${atividade.inscritos()}">3 de 20</progress>
                 <p th:if="${#lists.isEmpty(inscritos)}" class="contagem">Ninguém inscrito ainda.</p>
                 <ol class="lista" th:unless="${#lists.isEmpty(inscritos)}">
-                    <li th:each="i : ${inscritos}">
-                        <span th:text="${i.nome()}">Ana Souza</span>
-                        <span class="sub" th:text="${i.telefoneFormatado()}">(41) 90000-0001</span>
+                    <li th:each="i : ${inscritos}" class="com-avatar">
+                        <span class="avatar" aria-hidden="true" th:text="${i.iniciais()}">AS</span>
+                        <span>
+                            <span th:text="${i.nome()}">Ana Souza</span>
+                            <span class="sub" th:text="${i.telefoneFormatado()}">(41) 90000-0001</span>
+                        </span>
                     </li>
                 </ol>
             </section>

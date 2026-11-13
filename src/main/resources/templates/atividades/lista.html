@@ -26,6 +26,8 @@
                     <span th:if="${a.esgotada()}" class="sub vagas zero"><span aria-hidden="true">⚠ </span>Vagas esgotadas (0)</span>
                     <span th:unless="${a.esgotada()}" class="sub vagas"
                           th:text="'Vagas restantes: ' + ${a.restantes()} + ' de ' + ${a.vagasTotal()}">Vagas restantes: 17 de 20</span>
+                    <progress th:class="${a.esgotada()} ? 'ocupacao cheia' : 'ocupacao'" aria-hidden="true"
+                              th:attr="max=${a.vagasTotal()}, value=${a.inscritos()}">3 de 20</progress>
                 </div>
                 <a class="btn btn-outline-primary btn-pequeno" th:href="@{/atividades/{id}/inscritos(id=${a.id()})}">
                     Ver inscritos<span class="visually-hidden" th:text="' em ' + ${a.nome()}"></span></a>

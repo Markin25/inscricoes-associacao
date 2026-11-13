@@ -5,7 +5,7 @@
 <a th:replace="~{layout/base :: pular}"></a>
 <div class="pagina">
     <header th:replace="~{layout/base :: appbar(false)}"></header>
-    <main id="conteudo" class="conteudo">
+    <main id="conteudo" class="conteudo login-grade">
         <div class="estreito">
             <h1>Entrar no sistema</h1>
             <p class="lead">Acesso exclusivo da equipe da associação.</p>
@@ -31,9 +31,22 @@
                     <input id="senha" name="senha" type="password" class="form-control"
                            autocomplete="current-password" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-grande w-100">Entrar</button>
+                <button type="submit" class="btn btn-primary btn-grande w-100" data-enviando="Entrando…">Entrar</button>
             </form>
         </div>
+
+        <!-- Só no computador: o que o sistema garante para a equipe. -->
+        <aside class="boas-vindas" aria-labelledby="h-boas-vindas">
+            <h2 id="h-boas-vindas">Inscrições sem perda e sem repetição</h2>
+            <ul>
+                <li><span class="marcador" aria-hidden="true">✓</span>
+                    <span><strong>Um cadastro por morador.</strong> O telefone não se repete, mesmo digitado de outro jeito.</span></li>
+                <li><span class="marcador" aria-hidden="true">✓</span>
+                    <span><strong>Aviso de duplicidade.</strong> Se o morador já existe, o sistema mostra o cadastro dele.</span></li>
+                <li><span class="marcador" aria-hidden="true">✓</span>
+                    <span><strong>Vagas sempre certas.</strong> Quando a atividade lota, a inscrição é recusada.</span></li>
+            </ul>
+        </aside>
     </main>
 </div>
 </body>

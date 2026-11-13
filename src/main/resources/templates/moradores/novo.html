@@ -17,7 +17,7 @@
 
             <form method="post" th:action="@{/moradores/novo}" th:object="${moradorForm}" novalidate>
                 <div th:replace="~{moradores/campos :: campos}"></div>
-                <button type="submit" class="btn btn-primary btn-grande w-100">Cadastrar</button>
+                <button type="submit" class="btn btn-primary btn-grande w-100" data-enviando="Cadastrando…">Cadastrar</button>
             </form>
         </div>
     </main>

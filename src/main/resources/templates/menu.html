@@ -6,13 +6,89 @@
 <div class="pagina">
     <header th:replace="~{layout/base :: appbar(true)}"></header>
     <main id="conteudo" class="conteudo">
-        <h1>Olá, <span th:text="${usuario}">atendimento</span></h1>
-        <p class="lead">O que você quer fazer agora?</p>
+        <div class="faixa-boas-vindas">
+            <div>
+                <h1>Olá, <span th:text="${usuario}">atendimento</span></h1>
+                <p class="lead">O que você quer fazer agora?</p>
+            </div>
+            <!-- Ilustração do bairro (decorativa). Cores vêm do tema, inclusive no modo escuro. -->
+            <svg class="ilustracao" viewBox="0 0 260 130" width="260" height="130" aria-hidden="true" focusable="false">
+                <circle class="il-sol" cx="222" cy="28" r="14"/>
+                <rect class="il-chao" x="0" y="112" width="260" height="5" rx="2.5"/>
+                <polygon class="il-telhado" points="12,64 48,34 84,64"/>
+                <rect class="il-casa" x="20" y="62" width="56" height="50" rx="2"/>
+                <rect class="il-porta" x="41" y="86" width="14" height="26" rx="2"/>
+                <rect class="il-janela" x="27" y="71" width="10" height="10" rx="1.5"/>
+                <rect class="il-janela" x="59" y="71" width="10" height="10" rx="1.5"/>
+                <polygon class="il-telhado" points="86,52 123,20 160,52"/>
+                <rect class="il-casa" x="94" y="50" width="58" height="62" rx="2"/>
+                <rect class="il-janela" x="102" y="60" width="12" height="12" rx="1.5"/>
+                <rect class="il-janela" x="132" y="60" width="12" height="12" rx="1.5"/>
+                <rect class="il-porta" x="116" y="88" width="14" height="24" rx="2"/>
+                <rect class="il-tronco" x="175" y="88" width="6" height="24" rx="2"/>
+                <circle class="il-copa" cx="178" cy="78" r="17"/>
+                <circle class="il-pessoa" cx="207" cy="82" r="6"/>
+                <rect class="il-pessoa" x="200" y="90" width="14" height="22" rx="7"/>
+                <circle class="il-pessoa-2" cx="232" cy="86" r="5.5"/>
+                <rect class="il-pessoa-2" x="225.5" y="93" width="13" height="19" rx="6.5"/>
+            </svg>
+        </div>
+
         <nav class="menu" aria-label="Menu principal">
-            <a class="btn btn-primary btn-grande" th:href="@{/inscrever}">Inscrever morador</a>
-            <a class="btn btn-outline-primary btn-grande" th:href="@{/moradores}">Moradores</a>
-            <a class="btn btn-outline-primary btn-grande" th:href="@{/atividades}">Atividades</a>
+            <a class="cartao-menu destaque" th:href="@{/inscrever}">
+                <span class="icone-menu" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                        <circle cx="9" cy="8" r="4"/><path d="M2 21v-1a7 7 0 0 1 11.5-5.4"/><path d="M19 14v8M15 18h8"/>
+                    </svg>
+                </span>
+                <span class="texto-menu">
+                    <span class="titulo-menu">Inscrever morador</span>
+                    <span class="desc-menu">Busque ou cadastre o morador e escolha a atividade.</span>
+                </span>
+            </a>
+            <a class="cartao-menu" th:href="@{/moradores}">
+                <span class="icone-menu" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                        <circle cx="8" cy="8" r="3.5"/><path d="M1.5 20v-.5a6.5 6.5 0 0 1 13 0v.5"/><circle cx="17" cy="9" r="2.8"/><path d="M16 14.2a5.5 5.5 0 0 1 6.5 5.3v.5"/>
+                    </svg>
+                </span>
+                <span class="texto-menu">
+                    <span class="titulo-menu">Moradores</span>
+                    <span class="desc-menu">Consulte e corrija nome ou telefone.</span>
+                </span>
+            </a>
+            <a class="cartao-menu" th:href="@{/atividades}">
+                <span class="icone-menu" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                        <rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M7.5 14h3M13.5 14h3M7.5 17.5h3"/>
+                    </svg>
+                </span>
+                <span class="texto-menu">
+                    <span class="titulo-menu">Atividades</span>
+                    <span class="desc-menu">Cadastre atividades e veja quem está inscrito.</span>
+                </span>
+            </a>
         </nav>
+
+        <section class="proximas" aria-labelledby="h-proximas">
+            <h2 id="h-proximas">Próximas atividades</h2>
+            <p th:if="${#lists.isEmpty(proximas)}" class="contagem">Nenhuma atividade de hoje em diante.</p>
+            <ul class="lista-proximas" th:unless="${#lists.isEmpty(proximas)}">
+                <li th:each="a : ${proximas}">
+                    <a class="proxima" th:href="@{/atividades/{id}/inscritos(id=${a.id()})}">
+                        <span class="proxima-topo">
+                            <span class="nome" th:text="${a.nome()}">Oficina de artes</span>
+                            <span class="sub" th:text="${a.dataFormatada()}">15/11/2026</span>
+                        </span>
+                        <progress th:class="${a.esgotada()} ? 'ocupacao cheia' : 'ocupacao'" aria-hidden="true"
+                                  th:attr="max=${a.vagasTotal()}, value=${a.inscritos()}">3 de 20</progress>
+                        <span th:if="${a.esgotada()}" class="vagas zero"><span aria-hidden="true">⚠ </span>Vagas esgotadas (0)</span>
+                        <span th:unless="${a.esgotada()}" class="vagas"
+                              th:text="'Vagas restantes: ' + ${a.restantes()} + ' de ' + ${a.vagasTotal()}">Vagas restantes: 17 de 20</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
     </main>
 </div>
 </body>

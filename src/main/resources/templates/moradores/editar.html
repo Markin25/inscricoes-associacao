@@ -15,7 +15,7 @@
 
             <form method="post" th:action="@{/moradores/{id}/editar(id=${morador.id})}" th:object="${moradorForm}" novalidate>
                 <div th:replace="~{moradores/campos :: campos}"></div>
-                <button type="submit" class="btn btn-primary btn-grande w-100">Salvar correção</button>
+                <button type="submit" class="btn btn-primary btn-grande w-100" data-enviando="Salvando…">Salvar correção</button>
             </form>
         </div>
     </main>

@@ -57,6 +57,27 @@ class InscricaoControllerTest extends IntegracaoBase {
     }
 
     @Test
+    void guiaDeEtapasMostraOndeAPessoaEstaEOResumo() throws Exception {
+        mvc.perform(get("/inscrever"))
+                .andExpect(content().string(containsString("aria-label=\"Etapas da inscrição\"")))
+                .andExpect(content().string(containsString("Morador<span class=\"visually-hidden\"> (etapa atual)</span>")))
+                .andExpect(content().string(containsString("Comece buscando o morador")))
+                .andExpect(content().string(containsString("Primeiro escolha ou cadastre o morador na etapa 1.")));
+
+        mvc.perform(get("/inscrever").param("moradorId", ana.getId().toString()))
+                .andExpect(content().string(containsString("Morador<span class=\"visually-hidden\"> (concluída)</span>")))
+                .andExpect(content().string(containsString("Atividade<span class=\"visually-hidden\"> (etapa atual)</span>")))
+                .andExpect(content().string(containsString("Agora marque a <strong>atividade</strong>")))
+                .andExpect(content().string(containsString("uma atividade (marque acima)")))
+                .andExpect(content().string(not(containsString("Primeiro escolha ou cadastre o morador"))));
+
+        mvc.perform(get("/inscrever").param("moradorId", ana.getId().toString())
+                        .param("atividadeId", oficina.getId().toString()))
+                .andExpect(content().string(containsString("Confirmar<span class=\"visually-hidden\"> (etapa atual)</span>")))
+                .andExpect(content().string(containsString("id=\"resumo-atividade\">Oficina de artes</strong>")));
+    }
+
+    @Test
     void buscaEncontraPorNomeEPorTelefone() throws Exception {
         mvc.perform(get("/inscrever").param("q", "ana"))
                 .andExpect(content().string(containsString("Resultado da busca")))

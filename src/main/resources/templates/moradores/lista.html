@@ -34,9 +34,12 @@
 
         <ul class="lista" th:unless="${moradores.empty}">
             <li th:each="m : ${moradores.content}" class="linha-lista">
-                <div>
-                    <span class="nome" th:text="${m.nome}">Ana Souza</span>
-                    <span class="sub" th:text="${m.telefoneFormatado}">(41) 90000-0001</span>
+                <div class="com-avatar">
+                    <span class="avatar" aria-hidden="true" th:text="${m.iniciais}">AS</span>
+                    <span>
+                        <span class="nome" th:text="${m.nome}">Ana Souza</span>
+                        <span class="sub" th:text="${m.telefoneFormatado}">(41) 90000-0001</span>
+                    </span>
                 </div>
                 <div class="acoes-linha">
                     <a class="btn btn-outline-primary btn-pequeno" th:href="@{/moradores/{id}/editar(id=${m.id})}">
