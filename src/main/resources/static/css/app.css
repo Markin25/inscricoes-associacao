@@ -28,6 +28,8 @@
   --ico-fg: #ffffff;
   --trilho: #d5e0e1;
   --sombra: 0 1px 2px rgba(10, 40, 45, .06), 0 4px 12px rgba(10, 40, 45, .06);
+  --sombra-alta: 0 2px 4px rgba(10, 40, 45, .08), 0 10px 24px rgba(10, 40, 45, .12);
+  --pulso: rgba(11, 85, 99, .45);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -44,6 +46,8 @@
     --ico-fg: #0d1a1c;
     --trilho: #2a4045;
     --sombra: none;
+    --sombra-alta: 0 0 0 1px var(--primary);
+    --pulso: rgba(92, 195, 214, .5);
   }
 }
 
@@ -321,6 +325,28 @@ fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
   .res-botoes { grid-column: 1; grid-row: 2; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .btn { transition: none; }
+/* Animações e microinterações. Só para quem não pediu "reduzir movimento" no sistema;
+   para essas pessoas a interface fica estática. Nada pisca e tudo dura menos de 1 segundo. */
+@media (prefers-reduced-motion: no-preference) {
+  .conteudo { animation: surgir .28s ease-out both; }
+  .aviso { animation: surgir-aviso .32s ease-out both; }
+  .aviso.ok .ico, .aviso.err .ico, .aviso.warn .ico { animation: saltar .45s cubic-bezier(.2, 1.4, .4, 1) .12s both; }
+  progress.ocupacao { animation: encher .8s cubic-bezier(.2, .8, .2, 1) .15s both; }
+  .etapas li.atual .num { animation: pulsar 1.4s ease-out .3s 2; }
+
+  .btn, .cartao-menu, .opcao, .proxima, .lista li, .avatar {
+    transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn:hover, .cartao-menu:hover, .proxima:hover { transform: translateY(-2px); }
+  .btn:active, .cartao-menu:active { transform: translateY(1px); }
+  .cartao-menu:hover, .proxima:hover, .opcao:hover { box-shadow: var(--sombra-alta); }
+  .cartao-menu:hover .icone-menu { transform: scale(1.06); }
+  .icone-menu { transition: transform .2s ease; }
+  .opcao:has(input:checked) { animation: escolher .25s ease-out; }
 }
+@keyframes surgir { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes surgir-aviso { from { opacity: 0; transform: translateY(-4px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes saltar { from { opacity: 0; transform: scale(.3); } to { opacity: 1; transform: none; } }
+@keyframes encher { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes pulsar { 0% { box-shadow: 0 0 0 0 var(--pulso); } 100% { box-shadow: 0 0 0 12px transparent; } }
+@keyframes escolher { 50% { transform: scale(1.015); } }
