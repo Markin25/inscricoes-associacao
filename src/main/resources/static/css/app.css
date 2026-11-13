@@ -52,11 +52,15 @@ body {
   box-shadow: none;
 }
 
+/* Link "Pular para o conteúdo": escondido até receber o foco do teclado. Escondido por recorte,
+   e não deslocado para cima, para não aparecer quando o texto é ampliado (200%). */
 .pular {
-  position: absolute; left: 8px; top: -100px; z-index: 10;
+  position: absolute; left: 8px; top: 8px; z-index: 10;
   padding: 12px 16px; background: var(--surface); color: var(--primary); font-weight: 700; border-radius: 8px;
 }
-.pular:focus { top: 8px; }
+.pular:not(:focus) {
+  width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
 
 /* Estrutura */
 .pagina { max-width: 1120px; margin: 0 auto; background: var(--surface); min-height: 100vh; }
