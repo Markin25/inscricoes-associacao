@@ -1,5 +1,7 @@
 # Sistema de cadastro e inscrições: Associação de moradores do Parolin
 
+[![CI](https://github.com/Markin25/inscricoes-associacao/actions/workflows/ci.yml/badge.svg)](https://github.com/Markin25/inscricoes-associacao/actions/workflows/ci.yml)
+
 MVP desenvolvido na disciplina Projeto de Software (Ciência da Computação), Experiência Prática 3.
 
 ## Problema
@@ -144,6 +146,8 @@ São 90 testes. Os obrigatórios ficam em:
 | (d) repetida grava uma linha só e não consome vaga | `service/InscricaoServiceTest` |
 | (e) concorrência: 8 threads na última vaga, só 1 grava | `service/InscricaoConcorrenciaTest` |
 | (f) segurança: login obrigatório, CSRF, BCrypt, bloqueio na 6ª tentativa, `' OR '1'='1` e `<script>` | `SegurancaTest`, `LoginIntegrationTest` e os testes de controller |
+
+**Integração contínua:** a cada push e a cada PR para a `main`, o GitHub Actions (`.github/workflows/ci.yml`) compila com Java 21, sobe um PostgreSQL 16 descartável, roda os 90 testes com cobertura (JaCoCo) e guarda o JAR e o relatório como artefatos da execução. O banco do CI aceita conexão sem senha porque só existe dentro da máquina do CI; não há segredo para configurar.
 
 O teste de concorrência foi conferido ao contrário: sem a trava de escrita, as 8 threads conseguiram se inscrever numa atividade de 1 vaga e o teste falhou.
 
