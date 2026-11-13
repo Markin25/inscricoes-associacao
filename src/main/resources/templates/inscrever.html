@@ -45,9 +45,12 @@
                 <th:block th:if="${moradorSelecionado != null}">
                     <div class="cartao selecionado">
                         <div class="linha-lista">
-                            <div>
-                                <span class="nome" th:text="${moradorSelecionado.nome}">Beatriz Rocha</span>
-                                <span class="sub" th:text="${moradorSelecionado.telefoneFormatado}">(41) 90000-0003</span>
+                            <div class="com-avatar">
+                                <span class="avatar" aria-hidden="true" th:text="${moradorSelecionado.iniciais}">BR</span>
+                                <span>
+                                    <span class="nome" th:text="${moradorSelecionado.nome}">Beatriz Rocha</span>
+                                    <span class="sub" th:text="${moradorSelecionado.telefoneFormatado}">(41) 90000-0003</span>
+                                </span>
                             </div>
                             <a class="btn btn-outline-primary" th:href="@{/inscrever(atividadeId=${atividadeId})}">
                                 Trocar<span class="visually-hidden"> morador</span></a>
@@ -76,9 +79,12 @@
                            th:text="'Mostrando ' + ${resultados.numberOfElements} + ' de ' + ${resultados.totalElements} + '. Digite mais para refinar a busca.'"></p>
                         <div class="cartao" th:each="m : ${resultados.content}">
                             <div class="linha-lista">
-                                <div>
-                                    <span class="nome" th:text="${m.nome}">Ana Souza</span>
-                                    <span class="sub" th:text="${m.telefoneFormatado}">(41) 90000-0001</span>
+                                <div class="com-avatar">
+                                    <span class="avatar" aria-hidden="true" th:text="${m.iniciais}">AS</span>
+                                    <span>
+                                        <span class="nome" th:text="${m.nome}">Ana Souza</span>
+                                        <span class="sub" th:text="${m.telefoneFormatado}">(41) 90000-0001</span>
+                                    </span>
                                 </div>
                                 <a class="btn btn-outline-primary" th:href="@{/inscrever(moradorId=${m.id}, atividadeId=${atividadeId})}">
                                     Selecionar<span class="visually-hidden" th:text="' ' + ${m.nome}"></span></a>

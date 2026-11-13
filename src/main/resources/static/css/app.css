@@ -195,6 +195,16 @@ progress.ocupacao.cheia::-moz-progress-bar { background: var(--err-bd); }
 .lista li:first-child { border-top: 0; }
 .linha-lista { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .nome { font-weight: 700; display: block; overflow-wrap: anywhere; }
+
+/* Avatar com as iniciais (decorativo: o nome está sempre escrito ao lado) */
+.com-avatar { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.com-avatar > span:last-child { min-width: 0; }
+.avatar {
+  flex: 0 0 40px; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--info-bg); color: var(--primary); font-weight: 700; font-size: .9375rem; letter-spacing: .02em;
+  border: 2px solid var(--primary);
+}
+.cartao.selecionado .avatar { background: var(--primary); color: var(--on-primary); }
 .sub { color: var(--muted); display: block; }
 .acoes-linha { display: flex; gap: 8px; flex-wrap: wrap; }
 .paginacao { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
