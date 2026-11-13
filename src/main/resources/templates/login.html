@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Entrar')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(false)}"></header>
+    <main id="conteudo" class="conteudo">
+        <div class="estreito">
+            <h1>Entrar no sistema</h1>
+            <p class="lead">Acesso exclusivo da equipe da associação.</p>
+
+            <div th:if="${param.erro}" class="aviso err" role="alert" tabindex="-1" data-foco>
+                <span class="ico" aria-hidden="true">✖</span>
+                <div><span class="visually-hidden">Erro: </span><strong>Usuário ou senha incorretos.</strong></div>
+            </div>
+            <div th:if="${param.saiu}" class="aviso info" role="status">
+                <span class="ico" aria-hidden="true">i</span>
+                <div><strong>Você saiu do sistema.</strong></div>
+            </div>
+
+            <form method="post" th:action="@{/login}">
+                <div class="campo">
+                    <label for="usuario" class="form-label">Usuário</label>
+                    <input id="usuario" name="usuario" type="text" class="form-control"
+                           autocomplete="username" autocapitalize="none" spellcheck="false"
+                           maxlength="50" required>
+                </div>
+                <div class="campo">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input id="senha" name="senha" type="password" class="form-control"
+                           autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-grande w-100">Entrar</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

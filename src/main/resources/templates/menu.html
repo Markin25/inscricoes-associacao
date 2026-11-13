@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Menu')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(true)}"></header>
+    <main id="conteudo" class="conteudo">
+        <h1>Olá, <span th:text="${usuario}">atendimento</span></h1>
+        <p class="lead">O que você quer fazer agora?</p>
+        <nav class="menu" aria-label="Menu principal">
+            <a class="btn btn-primary btn-grande" th:href="@{/inscrever}">Inscrever morador</a>
+            <a class="btn btn-outline-primary btn-grande" th:href="@{/moradores}">Moradores</a>
+            <a class="btn btn-outline-primary btn-grande" th:href="@{/atividades}">Atividades</a>
+        </nav>
+    </main>
+</div>
+</body>
+</html>

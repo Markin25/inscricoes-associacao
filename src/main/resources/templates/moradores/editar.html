@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Corrigir morador')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(true)}"></header>
+    <main id="conteudo" class="conteudo">
+        <div class="estreito">
+            <h1>Corrigir morador</h1>
+            <p class="voltar"><a class="btn btn-outline-primary btn-pequeno" th:href="@{/moradores}">Voltar para Moradores</a></p>
+            <p class="lead">As inscrições deste morador continuam valendo depois da correção.</p>
+
+            <th:block th:if="${alerta}"><div th:replace="~{layout/base :: alerta(${alerta})}"></div></th:block>
+
+            <form method="post" th:action="@{/moradores/{id}/editar(id=${morador.id})}" th:object="${moradorForm}" novalidate>
+                <div th:replace="~{moradores/campos :: campos}"></div>
+                <button type="submit" class="btn btn-primary btn-grande w-100">Salvar correção</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

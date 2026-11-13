@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Campos Nome e Telefone, usados no cadastro, no cadastro rápido e na correção.
+     Precisa estar dentro de um form com th:object de um MoradorForm. -->
+<th:block th:fragment="campos">
+    <div class="campo">
+        <label for="cad_nome" class="form-label">Nome</label>
+        <input id="cad_nome" type="text" class="form-control" th:field="*{nome}"
+               autocomplete="off" maxlength="120" required
+               th:attr="aria-invalid=${#fields.hasErrors('nome')} ? 'true' : null,
+                        aria-describedby=${#fields.hasErrors('nome')} ? 'nome-erro' : null">
+        <th:block th:if="${#fields.hasErrors('nome')}"><div th:replace="~{layout/base :: erroCampo('nome-erro', ${#fields.errors('nome')[0]})}"></div></th:block>
+    </div>
+    <div class="campo">
+        <label for="cad_tel" class="form-label">Telefone<span class="dica" id="tel-dica">DDD e número, só números</span></label>
+        <input id="cad_tel" type="text" class="form-control" th:field="*{telefone}"
+               inputmode="tel" autocomplete="off" maxlength="20" required
+               th:attr="aria-invalid=${#fields.hasErrors('telefone')} ? 'true' : null,
+                        aria-describedby=${#fields.hasErrors('telefone')} ? 'tel-dica tel-erro' : 'tel-dica'">
+        <th:block th:if="${#fields.hasErrors('telefone')}"><div th:replace="~{layout/base :: erroCampo('tel-erro', ${#fields.errors('telefone')[0]})}"></div></th:block>
+    </div>
+</th:block>
+</body>
+</html>

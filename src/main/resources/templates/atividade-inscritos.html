@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head(${alerta != null} ? 'Resultado' : 'Inscritos')}"></head>
+<body>
+<a th:replace="~{layout/base :: pular}"></a>
+<div class="pagina">
+    <header th:replace="~{layout/base :: appbar(true)}"></header>
+    <main id="conteudo" class="conteudo">
+        <h1 th:text="${alerta != null} ? 'Resultado' : 'Inscritos'">Resultado</h1>
+
+        <div class="colunas resultado">
+            <div class="res-alerta" th:if="${alerta}">
+                <div th:replace="~{layout/base :: alerta(${alerta})}"></div>
+            </div>
+
+            <section class="res-lista" aria-labelledby="h-inscritos">
+                <h2 id="h-inscritos" th:text="'Inscritos em ' + ${atividade.nome()}">Inscritos em Oficina de artes</h2>
+                <p class="contagem">
+                    <span th:text="${atividade.dataFormatada()}">15/11/2026</span> ·
+                    <span th:text="${atividade.inscritos()} + ' de ' + ${atividade.vagasTotal()} + ' vagas usadas · ' + ${atividade.restantes()} + ' restantes'">3 de 20 vagas usadas · 17 restantes</span>
+                </p>
+                <p th:if="${#lists.isEmpty(inscritos)}" class="contagem">Ninguém inscrito ainda.</p>
+                <ol class="lista" th:unless="${#lists.isEmpty(inscritos)}">
+                    <li th:each="i : ${inscritos}">
+                        <span th:text="${i.nome()}">Ana Souza</span>
+                        <span class="sub" th:text="${i.telefoneFormatado()}">(41) 90000-0001</span>
+                    </li>
+                </ol>
+            </section>
+
+            <div class="pilha res-botoes">
+                <a class="btn btn-primary btn-grande" th:href="@{/inscrever}">Nova inscrição</a>
+                <a class="btn btn-outline-primary btn-grande" th:href="@{/}">Voltar ao menu</a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
