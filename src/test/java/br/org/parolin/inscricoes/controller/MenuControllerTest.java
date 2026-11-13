@@ -43,6 +43,14 @@ class MenuControllerTest extends IntegracaoBase {
     }
 
     @Test
+    void cabecalhoMostraQuemEstaConectadoEmTodasAsTelas() throws Exception {
+        for (String tela : new String[] {"/", "/inscrever", "/moradores", "/atividades"}) {
+            mvc.perform(get(tela))
+                    .andExpect(content().string(containsString("Conectado como </span><span>atendimento</span>")));
+        }
+    }
+
+    @Test
     void menuSemAtividadesFuturasAvisa() throws Exception {
         mvc.perform(get("/"))
                 .andExpect(content().string(containsString("Nenhuma atividade de hoje em diante.")));

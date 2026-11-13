@@ -15,10 +15,20 @@
 
 <!-- logado: mostra o botão Sair (POST com token CSRF, inserido pelo th:action) -->
 <header th:fragment="appbar(logado)" class="appbar">
-    <a class="brand" th:href="@{/}">Inscrições<small>Associação de moradores do Parolin</small></a>
-    <form th:if="${logado}" method="post" th:action="@{/logout}" class="m-0">
-        <button type="submit" class="btn btn-appbar">Sair</button>
-    </form>
+    <a class="brand" th:href="@{/}">
+        <span class="marca" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><circle cx="12" cy="13" r="2"/><path d="M8.8 20a3.2 3.2 0 0 1 6.4 0"/>
+            </svg>
+        </span>
+        <span class="brand-texto">Inscrições<small>Associação de moradores do Parolin</small></span>
+    </a>
+    <div th:if="${logado}" class="sessao">
+        <span th:if="${usuarioLogado}" class="usuario-logado"><span class="visually-hidden">Conectado como </span><span th:text="${usuarioLogado}">atendimento.demo</span></span>
+        <form method="post" th:action="@{/logout}" class="m-0">
+            <button type="submit" class="btn btn-appbar">Sair</button>
+        </form>
+    </div>
 </header>
 
 <!-- Aviso com ícone + texto + cor. "a" é um dto.Alerta. Recebe o foco ao abrir a tela. -->

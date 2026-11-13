@@ -128,8 +128,15 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
 }
 .appbar :focus-visible { outline-color: var(--on-primary); }
 
-.brand { color: inherit; text-decoration: none; }
-.brand:hover { color: inherit; text-decoration: underline; }
+.brand { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.brand:hover { color: inherit; }
+.brand:hover .brand-texto { text-decoration: underline; }
+.marca {
+  flex: 0 0 40px; height: 40px; border-radius: 10px; display: grid; place-items: center;
+  background: var(--on-primary); color: var(--primary);
+}
+.sessao { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.usuario-logado { font-weight: 700; }
 .btn-pequeno { --bs-btn-padding-x: .8rem; --bs-btn-padding-y: .4rem; }
 .voltar { margin: 0 0 16px; }
 .dica { display: block; font-weight: 400; color: var(--muted); font-size: .9375rem; margin-top: 2px; }
@@ -181,7 +188,9 @@ progress.ocupacao.cheia::-moz-progress-bar { background: var(--err-bd); }
 .busca { display: grid; gap: 8px; }
 .busca .campo { margin: 0; }
 .contagem { color: var(--muted); margin: 0 0 8px; }
-.lista { list-style: none; margin: 0 0 16px; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.lista { list-style: none; margin: 0 0 16px; padding: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--sombra); background: var(--surface); }
+.linha-lista > div:first-child { flex: 1 1 200px; min-width: 0; }
+.linha-lista progress.ocupacao { margin-top: 6px; max-width: 320px; }
 .lista li { padding: 10px 14px; border-top: 1px solid var(--border); }
 .lista li:first-child { border-top: 0; }
 .linha-lista { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
@@ -192,13 +201,19 @@ progress.ocupacao.cheia::-moz-progress-bar { background: var(--err-bd); }
 .acao-aviso { margin: -4px 0 14px; }
 
 /* Inscrever: guia de etapas (1 Morador → 2 Atividade → 3 Confirmar) */
+/* Celular: três colunas iguais, número em cima e nome embaixo. A partir de 600 px: uma linha com traços. */
 .etapas {
   list-style: none; margin: 4px 0 14px; padding: 0;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
 }
-.etapas li { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 700; }
-.etapas li + li::before {
-  content: ""; width: 28px; height: 2px; background: var(--field-border); margin-right: 2px;
+.etapas li {
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
+  color: var(--muted); font-weight: 700;
+}
+@media (min-width: 600px) {
+  .etapas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; }
+  .etapas li { flex-direction: row; text-align: left; gap: 8px; }
+  .etapas li + li::before { content: ""; width: 28px; height: 2px; background: var(--field-border); margin-right: 2px; }
 }
 .etapas .num {
   width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: 0 0 32px;
@@ -220,12 +235,16 @@ progress.ocupacao.cheia::-moz-progress-bar { background: var(--err-bd); }
 .resumo { margin: 4px 0 12px; padding: 10px 14px; background: var(--surface-2); border-radius: 8px; border: 1px solid var(--border); }
 
 /* Inscrever: cartões e opções de atividade */
-.cartao { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: var(--surface-2); margin-bottom: 10px; }
+.cartao { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; background: var(--surface-2); margin-bottom: 10px; box-shadow: var(--sombra); }
 .cartao.selecionado { border: 2px solid var(--primary); background: var(--info-bg); }
 .opcao {
   display: flex; gap: 12px; align-items: flex-start; min-height: 56px; padding: 12px 14px;
-  border: 2px solid var(--border); border-radius: 10px; margin-bottom: 10px; cursor: pointer; background: var(--surface);
+  border: 2px solid var(--border); border-radius: 12px; margin-bottom: 10px; cursor: pointer; background: var(--surface);
+  box-shadow: var(--sombra);
 }
+.opcao:hover { border-color: var(--primary); }
+.opcao > span { flex: 1; min-width: 0; }
+.opcao progress.ocupacao { display: block; margin-top: 8px; }
 .opcao:has(input:checked) { border-color: var(--primary); background: var(--info-bg); }
 .opcao input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--primary); flex: 0 0 24px; }
 .opcao .t { font-weight: 700; display: block; overflow-wrap: anywhere; }
@@ -239,6 +258,18 @@ fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
 .espaco-baixo { margin: 0 0 12px; }
 .busca-inscricao { margin-bottom: 8px; }
 .pilha { display: grid; gap: 12px; }
+
+/* Login: painel de boas-vindas (aparece só no computador) */
+.boas-vindas {
+  display: none; padding: 24px 28px; border-radius: 14px; background: var(--info-bg); color: var(--info-fg);
+}
+.boas-vindas h2 { margin: 0 0 14px; color: var(--text); }
+.boas-vindas ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.boas-vindas li { display: flex; gap: 12px; align-items: flex-start; }
+.marcador {
+  flex: 0 0 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ok-bd); color: var(--ico-fg); font-weight: 700;
+}
 
 /* Avisos: ícone + texto + cor (nunca só cor) */
 .aviso {
@@ -256,7 +287,7 @@ fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
 .aviso.info { background: var(--info-bg); color: var(--info-fg); border-color: var(--info-bd); } .aviso.info .ico { background: var(--info-bd); }
 
 @media (min-width: 900px) {
-  .pagina { margin: 24px auto; min-height: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .pagina { margin: 24px auto; min-height: 0; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--sombra); }
   .appbar { min-height: 72px; padding: 10px 32px; }
   .brand { font-size: 1.25rem; }
   .conteudo { padding: 30px 36px 40px; }
@@ -268,6 +299,8 @@ fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
   .lista-proximas { grid-template-columns: repeat(2, 1fr); }
   .barra-acoes { grid-template-columns: 1fr auto; align-items: end; }
   .busca { grid-template-columns: 1fr auto; align-items: end; }
+  .login-grade { display: grid; grid-template-columns: minmax(0, 440px) 1fr; gap: 56px; align-items: start; }
+  .boas-vindas { display: block; }
   .colunas.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 48px; align-items: start; }
   .colunas.duas h2 { margin-top: 0; }
   /* Resultado: aviso e botões à esquerda, lista de inscritos à direita */

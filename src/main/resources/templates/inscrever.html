@@ -16,12 +16,12 @@
                     <span class="num" aria-hidden="true" th:text="${temMorador} ? '✓' : '1'">1</span>
                     <span>Morador<span class="visually-hidden" th:text="${temMorador} ? ' (concluída)' : ' (etapa atual)'"></span></span>
                 </li>
-                <li th:class="${temAtividade} ? 'feita' : (${temMorador} ? 'atual' : 'proxima')"
+                <li th:class="${temAtividade} ? 'feita' : (${temMorador} ? 'atual' : 'futura')"
                     th:attr="aria-current=${temMorador and !temAtividade} ? 'step' : null" data-etapa="atividade">
                     <span class="num" aria-hidden="true" th:text="${temAtividade} ? '✓' : '2'">2</span>
                     <span>Atividade<span class="visually-hidden" th:text="${temAtividade} ? ' (concluída)' : (${temMorador} ? ' (etapa atual)' : '')"></span></span>
                 </li>
-                <li th:class="${temAtividade} ? 'atual' : 'proxima'"
+                <li th:class="${temAtividade} ? 'atual' : 'futura'"
                     th:attr="aria-current=${temAtividade} ? 'step' : null" data-etapa="confirmar">
                     <span class="num" aria-hidden="true">3</span>
                     <span>Confirmar<span class="visually-hidden" th:text="${temAtividade} ? ' (etapa atual)' : ''"></span></span>
@@ -119,7 +119,7 @@
             <section aria-labelledby="h-atividade">
                 <h2 id="h-atividade">2. Atividade</h2>
                 <p th:if="${moradorSelecionado == null}" class="aguardando">
-                    <span aria-hidden="true">↖</span> Primeiro escolha ou cadastre o morador na etapa 1.
+                    Primeiro escolha ou cadastre o morador na etapa 1.
                 </p>
                 <form method="post" th:action="@{/inscricoes}" novalidate>
                     <input type="hidden" name="moradorId" th:if="${moradorSelecionado != null}" th:value="${moradorSelecionado.id}">
@@ -141,6 +141,8 @@
                                 <span class="m" th:text="${a.dataFormatada()}">15/11/2026</span>
                                 <span th:if="${a.esgotada()}" class="m vagas zero"><span aria-hidden="true">⚠ </span>Vagas esgotadas (0)</span>
                                 <span th:unless="${a.esgotada()}" class="m vagas" th:text="'Vagas restantes: ' + ${a.restantes()}">Vagas restantes: 17</span>
+                                <progress th:class="${a.esgotada()} ? 'ocupacao cheia' : 'ocupacao'" aria-hidden="true"
+                                          th:attr="max=${a.vagasTotal()}, value=${a.inscritos()}">3 de 20</progress>
                             </span>
                         </label>
                     </fieldset>
