@@ -6,8 +6,33 @@
 <div class="pagina">
     <header th:replace="~{layout/base :: appbar(true)}"></header>
     <main id="conteudo" class="conteudo">
-        <h1>Olá, <span th:text="${usuario}">atendimento</span></h1>
-        <p class="lead">O que você quer fazer agora?</p>
+        <div class="faixa-boas-vindas">
+            <div>
+                <h1>Olá, <span th:text="${usuario}">atendimento</span></h1>
+                <p class="lead">O que você quer fazer agora?</p>
+            </div>
+            <!-- Ilustração do bairro (decorativa). Cores vêm do tema, inclusive no modo escuro. -->
+            <svg class="ilustracao" viewBox="0 0 260 130" width="260" height="130" aria-hidden="true" focusable="false">
+                <circle class="il-sol" cx="222" cy="28" r="14"/>
+                <rect class="il-chao" x="0" y="112" width="260" height="5" rx="2.5"/>
+                <polygon class="il-telhado" points="12,64 48,34 84,64"/>
+                <rect class="il-casa" x="20" y="62" width="56" height="50" rx="2"/>
+                <rect class="il-porta" x="41" y="86" width="14" height="26" rx="2"/>
+                <rect class="il-janela" x="27" y="71" width="10" height="10" rx="1.5"/>
+                <rect class="il-janela" x="59" y="71" width="10" height="10" rx="1.5"/>
+                <polygon class="il-telhado" points="86,52 123,20 160,52"/>
+                <rect class="il-casa" x="94" y="50" width="58" height="62" rx="2"/>
+                <rect class="il-janela" x="102" y="60" width="12" height="12" rx="1.5"/>
+                <rect class="il-janela" x="132" y="60" width="12" height="12" rx="1.5"/>
+                <rect class="il-porta" x="116" y="88" width="14" height="24" rx="2"/>
+                <rect class="il-tronco" x="175" y="88" width="6" height="24" rx="2"/>
+                <circle class="il-copa" cx="178" cy="78" r="17"/>
+                <circle class="il-pessoa" cx="207" cy="82" r="6"/>
+                <rect class="il-pessoa" x="200" y="90" width="14" height="22" rx="7"/>
+                <circle class="il-pessoa-2" cx="232" cy="86" r="5.5"/>
+                <rect class="il-pessoa-2" x="225.5" y="93" width="13" height="19" rx="6.5"/>
+            </svg>
+        </div>
 
         <nav class="menu" aria-label="Menu principal">
             <a class="cartao-menu destaque" th:href="@{/inscrever}">

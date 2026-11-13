@@ -145,6 +145,31 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
 .voltar { margin: 0 0 16px; }
 .dica { display: block; font-weight: 400; color: var(--muted); font-size: .9375rem; margin-top: 2px; }
 
+/* Menu: faixa de boas-vindas com a ilustração do bairro */
+.faixa-boas-vindas {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  margin: 0 0 18px; padding: 18px 20px; border-radius: 16px; background: var(--info-bg);
+}
+.faixa-boas-vindas h1 { margin-bottom: 4px; }
+.faixa-boas-vindas .lead { margin: 0; color: var(--info-fg); }
+.ilustracao { display: none; flex: 0 0 auto; width: 200px; height: auto; }
+@media (min-width: 560px) { .ilustracao { display: block; } }
+.il-sol { fill: var(--warn-bd); }
+.il-chao { fill: var(--primary); opacity: .35; }
+.il-telhado { fill: var(--primary); }
+.il-casa { fill: var(--surface); stroke: var(--primary); stroke-width: 2.5; }
+.il-porta { fill: var(--primary); }
+.il-janela { fill: var(--warn-bd); opacity: .8; }
+.il-tronco { fill: var(--primary); opacity: .7; }
+.il-copa { fill: var(--ok-bd); }
+.il-pessoa { fill: var(--primary); }
+.il-pessoa-2 { fill: var(--err-bd); opacity: .85; }
+@media (prefers-reduced-motion: no-preference) {
+  /* 2 ciclos de 1,5 s: termina antes de 5 s, então não precisa de botão de pausa (WCAG 2.2.2). */
+  .il-sol { animation: flutuar 1.5s ease-in-out .4s 2 alternate; transform-box: fill-box; }
+}
+@keyframes flutuar { to { transform: translateY(-4px); } }
+
 /* Menu: cartões com ícone, título e para que serve */
 .menu { display: grid; gap: 12px; }
 .cartao-menu {
@@ -309,6 +334,8 @@ fieldset.sem-borda { border: 0; padding: 0; margin: 0; min-width: 0; }
   .lead { font-size: 1.125rem; }
   .menu { grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
   .cartao-menu { flex-direction: column; min-height: 168px; padding: 20px; }
+  .faixa-boas-vindas { padding: 22px 28px; }
+  .ilustracao { width: 260px; }
   .titulo-menu { font-size: 1.3125rem; }
   .lista-proximas { grid-template-columns: repeat(2, 1fr); }
   .barra-acoes { grid-template-columns: 1fr auto; align-items: end; }
