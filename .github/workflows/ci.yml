@@ -1,0 +1,102 @@
+# Integração contínua: a cada push e a cada PR para a main, compila com Java 21,
+# roda os testes (unitários e de integração com PostgreSQL), mede a cobertura
+# e guarda o JAR executável e o relatório de cobertura como artefatos.
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-e-testes:
+    name: Build, testes e cobertura (Java 21 + PostgreSQL 16)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      # Banco descartável, criado e destruído a cada execução. Aceita conexão sem senha
+      # (trust) porque só existe dentro desta máquina do CI: nenhuma senha no repositório.
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: parolin_test
+          POSTGRES_USER: parolin
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U parolin -d parolin_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    env:
+      DB_PORT: "5432"
+      DB_USER: parolin
+      # Exigida pela aplicação, mas ignorada pelo banco do CI (autenticação trust).
+      DB_PASSWORD: nao-usada-no-ci
+      JACOCO: org.jacoco:jacoco-maven-plugin:0.8.16
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Instalar o Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Compilar, testar e gerar o JAR (com cobertura JaCoCo)
+        run: ./mvnw -B -ntp $JACOCO:prepare-agent verify $JACOCO:report
+
+      - name: Resumo da execução
+        if: always()
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          import csv, glob, os
+          import xml.etree.ElementTree as ET
+          t = f = e = s = 0
+          for arq in glob.glob("target/surefire-reports/TEST-*.xml"):
+              r = ET.parse(arq).getroot()
+              t += int(r.get("tests")); f += int(r.get("failures"))
+              e += int(r.get("errors")); s += int(r.get("skipped"))
+          print("## Resultado do CI")
+          print(f"- Commit verificado: `{os.environ['GITHUB_SHA'][:7]}` ({os.environ['GITHUB_REF_NAME']})")
+          print(f"- Testes: **{t} executados**, {f} falhas, {e} erros, {s} ignorados")
+          try:
+              total = coberto = 0
+              for linha in csv.DictReader(open("target/site/jacoco/jacoco.csv", encoding="utf-8")):
+                  total += int(linha["INSTRUCTION_MISSED"]) + int(linha["INSTRUCTION_COVERED"])
+                  coberto += int(linha["INSTRUCTION_COVERED"])
+              print(f"- Cobertura (instruções, JaCoCo): **{100 * coberto / total:.1f}%**")
+          except FileNotFoundError:
+              print("- Cobertura: relatório não gerado")
+          print("- Status: " + ("✅ sucesso" if t and not (f or e) else "❌ falha"))
+          EOF
+
+      - name: Guardar o JAR executável
+        uses: actions/upload-artifact@v4
+        with:
+          name: inscricoes-associacao-jar
+          path: target/inscricoes-associacao.jar
+          retention-days: 14
+
+      - name: Guardar o relatório de cobertura e dos testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-testes-e-cobertura
+          path: |
+            target/site/jacoco/
+            target/surefire-reports/
+          retention-days: 14
