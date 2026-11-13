@@ -115,7 +115,7 @@
                             <input type="hidden" name="q" th:value="${busca}">
                             <input type="hidden" name="atividadeId" th:if="${atividadeId != null}" th:value="${atividadeId}">
                             <div th:replace="~{moradores/campos :: campos}"></div>
-                            <button type="submit" class="btn btn-outline-primary w-100">Cadastrar</button>
+                            <button type="submit" class="btn btn-outline-primary w-100" data-enviando="Cadastrando…">Cadastrar</button>
                         </form>
                     </th:block>
                 </th:block>
@@ -164,7 +164,7 @@
                                    th:text="${atividadeSelecionada != null} ? ${atividadeSelecionada.nome()} : 'uma atividade (marque acima)'">uma atividade (marque acima)</strong>.
                     </p>
 
-                    <button type="submit" class="btn btn-primary btn-grande w-100">Confirmar inscrição</button>
+                    <button type="submit" class="btn btn-primary btn-grande w-100" data-enviando="Confirmando…">Confirmar inscrição</button>
                 </form>
             </section>
         </div>

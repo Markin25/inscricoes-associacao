@@ -28,6 +28,34 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Botão "enviando": ao enviar, mostra o texto de data-enviando e ignora um segundo clique
+  // (evita a dúvida "cliquei duas vezes?"). O servidor também recusa inscrição repetida.
+  document.querySelectorAll('form').forEach(function (form) {
+    var botao = form.querySelector('button[type="submit"][data-enviando]');
+    if (!botao) { return; }
+    form.addEventListener('submit', function (evento) {
+      if (form.getAttribute('data-enviado') === 'sim') { evento.preventDefault(); return; }
+      form.setAttribute('data-enviado', 'sim');
+      botao.setAttribute('data-texto-original', botao.textContent);
+      botao.textContent = botao.getAttribute('data-enviando');
+      botao.setAttribute('aria-busy', 'true');
+      botao.classList.add('enviando');
+    });
+  });
+  // Voltar pelo navegador reabre a página da memória: devolve os botões ao normal.
+  window.addEventListener('pageshow', function (evento) {
+    if (!evento.persisted) { return; }
+    document.querySelectorAll('form[data-enviado]').forEach(function (form) {
+      form.removeAttribute('data-enviado');
+      var botao = form.querySelector('button.enviando');
+      if (botao) {
+        botao.textContent = botao.getAttribute('data-texto-original');
+        botao.removeAttribute('aria-busy');
+        botao.classList.remove('enviando');
+      }
+    });
+  });
+
   function marcarEtapa(li, estado, numero, textoLeitor) {
     li.className = estado;
     if (estado === 'atual') { li.setAttribute('aria-current', 'step'); } else { li.removeAttribute('aria-current'); }

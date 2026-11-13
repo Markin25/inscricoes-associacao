@@ -115,6 +115,16 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
   --bs-btn-padding-x: 1.1rem; --bs-btn-padding-y: .6rem; --bs-btn-font-size: 1.0625rem;
 }
 .btn-grande { min-height: 56px; font-size: 1.125rem; }
+/* Botão enquanto o formulário é enviado: indicador girando + texto ("Confirmando…") */
+.btn.enviando { cursor: progress; }
+.btn.enviando::before {
+  content: ""; width: 18px; height: 18px; border-radius: 50%;
+  border: 3px solid currentColor; border-right-color: transparent;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn.enviando::before { animation: girar .8s linear infinite; }
+}
+@keyframes girar { to { transform: rotate(360deg); } }
 .btn-primary {
   --bs-btn-color: var(--on-primary); --bs-btn-bg: var(--primary); --bs-btn-border-color: var(--primary);
   --bs-btn-hover-color: var(--on-primary); --bs-btn-hover-bg: var(--primary-hover); --bs-btn-hover-border-color: var(--primary-hover);

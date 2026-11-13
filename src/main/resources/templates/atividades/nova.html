@@ -34,7 +34,7 @@
                                     aria-describedby=${#fields.hasErrors('vagasTotal')} ? 'vagas-erro' : null">
                     <th:block th:if="${#fields.hasErrors('vagasTotal')}"><div th:replace="~{layout/base :: erroCampo('vagas-erro', ${#fields.errors('vagasTotal')[0]})}"></div></th:block>
                 </div>
-                <button type="submit" class="btn btn-primary btn-grande w-100">Cadastrar atividade</button>
+                <button type="submit" class="btn btn-primary btn-grande w-100" data-enviando="Cadastrando…">Cadastrar atividade</button>
             </form>
         </div>
     </main>
