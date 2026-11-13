@@ -9,6 +9,34 @@
         <h1>Inscrever morador</h1>
         <p th:replace="~{layout/base :: voltarMenu}"></p>
 
+        <!-- Guia de etapas: mostra onde a pessoa está e o que vem depois. -->
+        <th:block th:with="temMorador=${moradorSelecionado != null}, temAtividade=${moradorSelecionado != null and atividadeId != null}">
+            <ol class="etapas" aria-label="Etapas da inscrição">
+                <li th:class="${temMorador} ? 'feita' : 'atual'" th:attr="aria-current=${temMorador} ? null : 'step'">
+                    <span class="num" aria-hidden="true" th:text="${temMorador} ? '✓' : '1'">1</span>
+                    <span>Morador<span class="visually-hidden" th:text="${temMorador} ? ' (concluída)' : ' (etapa atual)'"></span></span>
+                </li>
+                <li th:class="${temAtividade} ? 'feita' : (${temMorador} ? 'atual' : 'proxima')"
+                    th:attr="aria-current=${temMorador and !temAtividade} ? 'step' : null" data-etapa="atividade">
+                    <span class="num" aria-hidden="true" th:text="${temAtividade} ? '✓' : '2'">2</span>
+                    <span>Atividade<span class="visually-hidden" th:text="${temAtividade} ? ' (concluída)' : (${temMorador} ? ' (etapa atual)' : '')"></span></span>
+                </li>
+                <li th:class="${temAtividade} ? 'atual' : 'proxima'"
+                    th:attr="aria-current=${temAtividade} ? 'step' : null" data-etapa="confirmar">
+                    <span class="num" aria-hidden="true">3</span>
+                    <span>Confirmar<span class="visually-hidden" th:text="${temAtividade} ? ' (etapa atual)' : ''"></span></span>
+                </li>
+            </ol>
+            <p class="instrucao" th:unless="${temMorador}">
+                <span class="ico-instrucao" aria-hidden="true">→</span>
+                <span>Comece buscando o morador pelo <strong>nome</strong> ou <strong>telefone</strong>. Se não encontrar, cadastre na hora.</span>
+            </p>
+            <p class="instrucao" th:if="${temMorador}">
+                <span class="ico-instrucao" aria-hidden="true">→</span>
+                <span>Morador escolhido. Agora marque a <strong>atividade</strong> e clique em <strong>Confirmar inscrição</strong>.</span>
+            </p>
+        </th:block>
+
         <div class="colunas duas">
             <!-- 1. Morador -->
             <section aria-labelledby="h-morador">
@@ -90,6 +118,9 @@
             <!-- 2. Atividade -->
             <section aria-labelledby="h-atividade">
                 <h2 id="h-atividade">2. Atividade</h2>
+                <p th:if="${moradorSelecionado == null}" class="aguardando">
+                    <span aria-hidden="true">↖</span> Primeiro escolha ou cadastre o morador na etapa 1.
+                </p>
                 <form method="post" th:action="@{/inscricoes}" novalidate>
                     <input type="hidden" name="moradorId" th:if="${moradorSelecionado != null}" th:value="${moradorSelecionado.id}">
 
@@ -103,7 +134,7 @@
                               th:attr="aria-describedby=${erroConfirmacao != null} ? 'confirmar-erro' : null">
                         <legend class="visually-hidden">Escolha a atividade</legend>
                         <label class="opcao" th:each="a : ${atividades}">
-                            <input type="radio" name="atividadeId" th:value="${a.id()}"
+                            <input type="radio" name="atividadeId" th:value="${a.id()}" th:attr="data-nome=${a.nome()}"
                                    th:checked="${atividadeId != null and atividadeId == a.id()}">
                             <span>
                                 <span class="t" th:text="${a.nome()}">Oficina de artes</span>
@@ -117,6 +148,13 @@
                     <div th:if="${erroConfirmacao}" class="erro-campo espaco-baixo" id="confirmar-erro" role="alert" tabindex="-1" data-foco>
                         <span aria-hidden="true">✖</span><span th:text="${erroConfirmacao}">Escolha o morador e a atividade antes de confirmar.</span>
                     </div>
+
+                    <!-- Resumo do que será gravado. O nome da atividade é atualizado pelo app.js ao marcar uma opção. -->
+                    <p th:if="${moradorSelecionado != null}" class="resumo" aria-live="polite">
+                        Você vai inscrever <strong th:text="${moradorSelecionado.nome}">Beatriz Rocha</strong>
+                        em <strong id="resumo-atividade"
+                                   th:text="${atividadeSelecionada != null} ? ${atividadeSelecionada.nome()} : 'uma atividade (marque acima)'">uma atividade (marque acima)</strong>.
+                    </p>
 
                     <button type="submit" class="btn btn-primary btn-grande w-100">Confirmar inscrição</button>
                 </form>

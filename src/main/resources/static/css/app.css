@@ -148,6 +148,34 @@ h2 { font-size: 1.1875rem; margin: 22px 0 8px; font-weight: 700; }
 .paginacao { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .acao-aviso { margin: -4px 0 14px; }
 
+/* Inscrever: guia de etapas (1 Morador → 2 Atividade → 3 Confirmar) */
+.etapas {
+  list-style: none; margin: 4px 0 14px; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px;
+}
+.etapas li { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 700; }
+.etapas li + li::before {
+  content: ""; width: 28px; height: 2px; background: var(--field-border); margin-right: 2px;
+}
+.etapas .num {
+  width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: 0 0 32px;
+  border: 2px solid var(--field-border); background: var(--surface); color: var(--muted); font-size: 1rem;
+}
+.etapas li.atual { color: var(--text); }
+.etapas li.atual .num { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.etapas li.feita { color: var(--ok-fg); }
+.etapas li.feita .num { background: var(--ok-bd); border-color: var(--ok-bd); color: var(--ico-fg); }
+.instrucao {
+  display: flex; gap: 10px; align-items: flex-start; margin: 0 0 20px; padding: 10px 14px;
+  background: var(--info-bg); color: var(--info-fg); border-left: 4px solid var(--primary); border-radius: 6px;
+}
+.ico-instrucao { font-weight: 700; }
+.aguardando {
+  margin: 0 0 12px; padding: 10px 14px; border: 2px dashed var(--field-border); border-radius: 10px;
+  color: var(--muted); font-weight: 700;
+}
+.resumo { margin: 4px 0 12px; padding: 10px 14px; background: var(--surface-2); border-radius: 8px; border: 1px solid var(--border); }
+
 /* Inscrever: cartões e opções de atividade */
 .cartao { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: var(--surface-2); margin-bottom: 10px; }
 .cartao.selecionado { border: 2px solid var(--primary); background: var(--info-bg); }
