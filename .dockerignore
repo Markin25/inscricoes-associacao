@@ -1,0 +1,14 @@
+# Fora da imagem: segredos, build local, histórico e arquivos que não rodam no servidor.
+.env
+.env.*
+target/
+.git/
+.github/
+.idea/
+.vscode/
+*.iml
+docs/
+scripts/
+docker/
+docker-compose.yml
+*.log

@@ -100,3 +100,22 @@ jobs:
             target/site/jacoco/
             target/surefire-reports/
           retention-days: 14
+
+  imagem-docker:
+    name: Imagem Docker de produção (a mesma que a Render publica)
+    runs-on: ubuntu-latest
+    needs: build-e-testes
+    timeout-minutes: 15
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Construir a imagem
+        run: docker build -t inscricoes-associacao:ci .
+
+      - name: Conferir que o .env não entrou na imagem
+        run: |
+          if docker run --rm --entrypoint sh inscricoes-associacao:ci -c "test -e /app/.env"; then
+            echo "::error::.env encontrado dentro da imagem"; exit 1
+          fi
+          echo "ok: imagem sem .env"
