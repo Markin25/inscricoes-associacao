@@ -114,7 +114,7 @@ Vagas restantes NÃO são gravadas: `vagas_total - count(inscricoes da atividade
 
 # Segurança (requisitos RNF01 e RNF02)
 
-- Todas as rotas exigem login, exceto `/login`, `/css/**`, `/js/**` e a página de erro. Negar por padrão.
+- Todas as rotas exigem login, exceto `/login`, `/css/**`, `/js/**`, `/fonts/**` (fonte Atkinson Hyperlegible local), a página de erro e `GET /saude` e `GET /saude/banco` (monitoramento; respondem só "ok"/"indisponivel"). Negar por padrão.
 - Senhas: BCrypt. Mínimo de 10 caracteres validado no servidor. Nunca texto limpo, MD5 ou SHA-1. Sem "recuperar senha" e sem auto-cadastro.
 - Usuário inicial: criado na subida, SOMENTE se a tabela `usuarios` estiver vazia, a partir das variáveis de ambiente `APP_ADMIN_USER` e `APP_ADMIN_PASSWORD`. Nenhuma credencial no código ou no repositório. O perfil `demo` cria o usuário `atendimento.demo` com senha vinda de `APP_DEMO_PASSWORD` (variável de ambiente).
 - Bloqueio de login: após 5 tentativas inválidas seguidas, bloquear o usuário por 15 minutos (`tentativas_falhas`, `bloqueado_ate`). Mensagem IGUAL para usuário inexistente, senha errada e usuário bloqueado: "Usuário ou senha incorretos". Zerar o contador no login bem-sucedido. Usuário com `ativo = false` não entra.
@@ -181,6 +181,6 @@ Só dados fictícios, os mesmos do protótipo: moradores Ana Souza (41) 90000-00
 
 # Decisões em aberto (não bloqueiam; sinalize quando chegar nelas)
 
-- Provedor de hospedagem do PostgreSQL/aplicação: ainda não escolhido.
+- Provedor de hospedagem: decidido. Aplicação na Render (plano gratuito, `Dockerfile`), PostgreSQL no Neon (gratuito) e monitoramento no UptimeRobot. Passo a passo em `docs/deploy.md`. O código continua sem depender do provedor: tudo vem por variável de ambiente.
 - Análise de vulnerabilidades das dependências: usar o que o Maven oferece sem acrescentar plugin pesado; se quiser um plugin (ex.: OWASP Dependency-Check), pergunte.
 - Divergências deste arquivo em relação ao documento da faculdade (eu atualizo o documento): `usuarios` ganhou `tentativas_falhas` e `bloqueado_ate`, e o RF05 entra junto do fluxo central.

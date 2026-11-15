@@ -111,6 +111,15 @@ Não há passo manual. A cada subida, a aplicação executa `src/main/resources/
 | `demo` | `parolin_demo` local | teste de usabilidade com dados fictícios |
 | `prod` | `DB_URL` (PostgreSQL gerenciado) | produção: cookie de sessão `Secure` (exige HTTPS), sem valores padrão |
 
+## Produção e monitoramento
+
+- **Aplicação:** Render, plano gratuito, com o container do `Dockerfile` (compila com JDK 21 e roda com JRE 21). A cada merge na `main`, a Render publica a nova versão.
+- **Banco:** PostgreSQL gerenciado no Neon, plano gratuito, na mesma região da aplicação.
+- **Monitoramento:** UptimeRobot consultando as rotas públicas `/saude` (aplicação, a cada 5 min) e `/saude/banco` (banco, a cada 60 min). Elas respondem só "ok" ou "indisponivel" (HTTP 503) e avisam por e-mail em caso de queda.
+- **Imagem local:** `docker build -t inscricoes-associacao .` gera a mesma imagem que vai para a Render. O CI também a constrói em todo PR.
+
+Passo a passo completo, com as variáveis de ambiente: `docs/deploy.md`.
+
 ## Demonstração (teste de usabilidade)
 
 Os dados fictícios são os mesmos do protótipo:
